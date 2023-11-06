@@ -12,6 +12,10 @@ export class UserRepository {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
+  findAll(): Promise<User[]> {
+    return this.userRepository.find();
+  }
+
   async insert(userCreateDto: UserCreateDto): Promise<User> {
     const userCreate = {
       ...userCreateDto,
