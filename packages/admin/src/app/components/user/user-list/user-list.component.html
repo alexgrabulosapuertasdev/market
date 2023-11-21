@@ -1,5 +1,9 @@
-<p-card header="LISTADO DE USUARIOS">
-  <p-table [value]="users">
+<p-card>
+  <p-table [value]="users" [paginator]="true" [rows]="25" [rowsPerPageOptions]="[25, 50, 100]">
+    <ng-template pTemplate="caption">
+      <h1 class="text-primary">Listado de usuarios</h1>
+    </ng-template>
+
     <ng-template pTemplate="header">
       <tr>
         <th pSortableColumn="name">Nombre <p-sortIcon field="name"></p-sortIcon></th>
@@ -10,7 +14,7 @@
         <th pSortableColumn="updatedAt">Actualizado el <p-sortIcon field="updatedAt"></p-sortIcon></th>
       </tr>
     </ng-template>
-
+  
     <ng-template pTemplate="body" let-user>
       <tr>
         <td>{{ user.name }}</td>

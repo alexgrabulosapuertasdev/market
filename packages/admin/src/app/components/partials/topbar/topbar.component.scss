@@ -1,8 +1,21 @@
-header {
+.header {
   align-items: center;
   background: var(--primary-color);
   color: white;
   display: flex;
-  height: 10vh;
+  gap: 2rem;
   padding-left: 2rem;
+  width: 100%;
+}
+
+.menu-toggle {
+  aspect-ratio: 1;
+  background: transparent;
+  border-radius: 50%;
+  border-color: white;
+  color: white;
+  
+  i {
+    background: transparent;
+  }
 }

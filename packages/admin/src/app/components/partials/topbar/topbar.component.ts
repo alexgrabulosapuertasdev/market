@@ -1,8 +1,14 @@
-import { Component } from "@angular/core";
+import { Component, EventEmitter, Output } from "@angular/core";
 
 @Component({
   selector: 'app-topbar',
   templateUrl: './topbar.component.html',
   styleUrls: ['./topbar.component.scss'],
 })
-export class TopbarComponent {}
+export class TopbarComponent {
+  @Output() menuToggled = new EventEmitter<void>();
+
+  toggleMenu(): void {
+    this.menuToggled.emit();
+  }
+}

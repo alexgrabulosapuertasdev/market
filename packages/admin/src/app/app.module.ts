@@ -9,10 +9,12 @@ import { UserListComponent } from './components/user/user-list/user-list.compone
 import { PrimengModule } from './primeng/primeng.module';
 import { DateFormatPipe } from './shared/pipe/data-formate.pipe';
 import { TopbarComponent } from './components/partials/topbar/topbar.component';
+import { MenuComponent } from './components/partials/menu/menu.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    MenuComponent,
     TopbarComponent,
     UserListComponent,
     DateFormatPipe,
