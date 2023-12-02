@@ -1,13 +1,13 @@
 import { Component, OnInit } from "@angular/core";
 import { UserService } from "../../../services/user.service";
-import { User } from "../../../shared/interfaces/user/user.model";
+import { UserResponse } from "../../../shared/interfaces/user/user-response.interface";
 
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
 })
 export class UserListComponent implements OnInit {
-  users: User[] = [];
+  users: UserResponse[] = [];
 
   constructor(
     private readonly userService: UserService,

@@ -10,8 +10,6 @@
         <th pSortableColumn="surnames">Apellidos <p-sortIcon field="surname"></p-sortIcon></th>
         <th pSortableColumn="email">Correo electrónico <p-sortIcon field="email"></p-sortIcon></th>
         <th pSortableColumn="role">Rol <p-sortIcon field="role"></p-sortIcon></th>
-        <th pSortableColumn="createdAt">Creado el <p-sortIcon field="createdAt"></p-sortIcon></th>
-        <th pSortableColumn="updatedAt">Actualizado el <p-sortIcon field="updatedAt"></p-sortIcon></th>
       </tr>
     </ng-template>
   
@@ -21,8 +19,6 @@
         <td>{{ user.surnames }}</td>
         <td>{{ user.email }}</td>
         <td>{{ user.role }}</td>
-        <td>{{ user.createdAt | dateFormat }}</td>
-        <td>{{ user.updatedAt | dateFormat }}</td>
       </tr>
     </ng-template>
   </p-table>
