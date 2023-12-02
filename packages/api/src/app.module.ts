@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { MariadbConfig } from './database/mariadb.config';
+import { MariadbConfig } from './shared/infrastructure/persistence/mariadb.config';
 import { ConfigModule } from '@nestjs/config';
-import { UserModule } from './user/user.module';
+import { UserModule } from './user/infrastructure/user.module';
 
 @Module({
   imports: [

@@ -13,7 +13,9 @@ export class MariadbConfig {
       port: Number(process.env['DATABASE_PORT']),
       host: process.env['DATABASE_HOST'],
       synchronize: true,
-      entities: [join(__dirname, '..', '**', 'entity', '*.entity{.ts,.js}')],
+      entities: [
+        join(__dirname, '..', '..', '..', '**', 'entity', '*.entity{.ts,.js}'),
+      ],
     });
   }
 }

@@ -1,4 +1,4 @@
-import { USER_ROLE } from '../../shared/enums/user.role';
+import { USER_ROLE } from '../../../domain/enum/user.role';
 import {
   Column,
   CreateDateColumn,
@@ -7,8 +7,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
-export class User {
+@Entity({ name: 'user' })
+export class UserTypeorm {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

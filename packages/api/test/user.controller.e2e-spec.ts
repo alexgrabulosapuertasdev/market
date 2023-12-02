@@ -2,20 +2,17 @@ import { HttpStatus, INestApplication } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { faker } from '@faker-js/faker';
-import { MariadbConfig } from '../src/database/mariadb.config';
-import { USER_ROLE } from '../src/shared/enums/user.role';
-import { User } from '../src/user/entity/user.entity';
-import { UserModule } from '../src/user/user.module';
-import { compare } from 'bcrypt';
-import { randomUUID } from 'crypto';
 import * as request from 'supertest';
 import { Repository } from 'typeorm';
+import { UserMother } from '../src/user/domain/mothers/user.mother';
+import { MariadbConfig } from '../src/shared/infrastructure/persistence/mariadb.config';
+import { UserTypeorm } from '../src/user/infrastructure/persistence/entity/user-typeorm.entity';
+import { UserModule } from '../src/user/infrastructure/user.module';
 
 describe('UserController (e2e)', () => {
   let app: INestApplication;
   let testingModule: TestingModule;
-  let userRepository: Repository<User>;
+  let userRepository: Repository<UserTypeorm>;
 
   beforeAll(async () => {
     testingModule = await Test.createTestingModule({
@@ -26,8 +23,8 @@ describe('UserController (e2e)', () => {
       ],
     }).compile();
 
-    userRepository = testingModule.get<Repository<User>>(
-      getRepositoryToken(User),
+    userRepository = testingModule.get<Repository<UserTypeorm>>(
+      getRepositoryToken(UserTypeorm),
     );
 
     app = testingModule.createNestApplication();
@@ -46,24 +43,9 @@ describe('UserController (e2e)', () => {
 
   describe('GET /', () => {
     it('should return an array of users', async () => {
-      const users = [
-        {
-          id: randomUUID(),
-          name: faker.person.firstName(),
-          surnames: `${faker.person.lastName()} ${faker.person.lastName()}`,
-          email: faker.internet.email(),
-          password: faker.internet.password(),
-          role: USER_ROLE.ADMIN,
-        },
-        {
-          id: randomUUID(),
-          name: faker.person.firstName(),
-          surnames: `${faker.person.lastName()} ${faker.person.lastName()}`,
-          email: faker.internet.email(),
-          password: faker.internet.password(),
-          role: USER_ROLE.ADMIN,
-        },
-      ];
+      const users = [UserMother.create(), UserMother.create()]
+        .map((user) => user.toPrimitives())
+        .sort((a, b) => a.id.localeCompare(b.id));
 
       await userRepository.save({ ...users[0] });
       await userRepository.save({ ...users[1] });
@@ -71,25 +53,15 @@ describe('UserController (e2e)', () => {
       const { body, status } = await request(app.getHttpServer()).get('/user');
 
       expect(status).toBe(HttpStatus.OK);
-      const response = body
-        .map(({ createdAt, updatedAt, ...result }) => result)
-        .sort((a, b) => (a.id > b.id ? 1 : 0));
 
-      expect(response).toEqual(users.sort((a, b) => (a.id > b.id ? 1 : 0)));
-      expect(body[0].createdAt).toBeDefined();
-      expect(body[0].updatedAt).toBeDefined();
+      const response = body.sort((a, b) => a.id.localeCompare(b.id));
+      expect(response).toEqual(users.map(({ password, ...user }) => user));
     });
   });
 
   describe('POST /', () => {
     it('should create a user', async () => {
-      const userCreateDto = {
-        name: faker.person.firstName(),
-        surnames: `${faker.person.lastName()} ${faker.person.lastName()}`,
-        email: faker.internet.email(),
-        password: faker.internet.password(),
-        role: USER_ROLE.ADMIN,
-      };
+      const userCreateDto = UserMother.create().toPrimitives();
 
       const { body, status } = await request(app.getHttpServer())
         .post('/user')
@@ -100,10 +72,8 @@ describe('UserController (e2e)', () => {
       expect(body.surnames).toBe(userCreateDto.surnames);
       expect(body.email).toBe(userCreateDto.email);
       expect(body.role).toBe(userCreateDto.role);
-      expect(compare(userCreateDto.password, body.password)).toBeTruthy();
       expect(body.id).toBeDefined();
-      expect(body.createdAt).toBeDefined();
-      expect(body.updatedAt).toBeDefined();
+      expect(body.password).not.toBeDefined();
     });
   });
 });
