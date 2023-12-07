@@ -7,6 +7,4 @@ export interface User {
   email: string;
   password: string;
   role: USER_ROLE;
-  createdAt: Date;
-  updatedAt: Date;
 }
