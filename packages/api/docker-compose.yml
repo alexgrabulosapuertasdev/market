@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  mariadb:
+    image: mariadb:10.6
+    container_name: mariadb
+    environment:
+      MARIADB_ROOT_PASSWORD: $DATABASE_PASSWORD
+      MARIADB_DATABASE: $DATABASE_NAME
+      MARIADB_USER: $DATABASE_USERNAME
+      MARIADB_PASSWORD: $DATABASE_PASSWORD
+    ports:
+      - $DATABASE_PORT:3306

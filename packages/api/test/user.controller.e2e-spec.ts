@@ -32,11 +32,11 @@ describe('UserController (e2e)', () => {
   });
 
   beforeEach(async () => {
-    await userRepository.query('DELETE FROM USER;');
+    await userRepository.query('DELETE FROM user;');
   });
 
   afterAll(async () => {
-    await userRepository.query('DELETE FROM USER;');
+    await userRepository.query('DELETE FROM user;');
     await app.close();
     await testingModule.close();
   });
