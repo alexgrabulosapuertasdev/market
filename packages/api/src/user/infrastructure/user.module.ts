@@ -6,12 +6,14 @@ import { UserTypeormRepository } from './persistence/user-typeorm.repository';
 import { UserFindAll } from '../application/find-all/user.find-all';
 import { UserCreate } from '../application/create/user.create';
 import { UserRepository } from '../domain/ports/user.repository';
+import { UserDelete } from '../application/delete/user.delete';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserTypeorm])],
   controllers: [UserController],
   providers: [
     UserCreate,
+    UserDelete,
     UserFindAll,
     { provide: UserRepository, useClass: UserTypeormRepository },
   ],

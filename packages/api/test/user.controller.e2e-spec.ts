@@ -76,4 +76,19 @@ describe('UserController (e2e)', () => {
       expect(body.password).not.toBeDefined();
     });
   });
+
+  describe('DELETE /:id', () => {
+    it('should delete a user', async () => {
+      const user = UserMother.create();
+
+      await userRepository.save(user.toPrimitives());
+
+      const { status } = await request(app.getHttpServer()).delete(
+        `/user/${user.id.value}`,
+      );
+
+      expect(await userRepository.find()).toEqual([]);
+      expect(status).toBe(HttpStatus.OK);
+    });
+  });
 });
