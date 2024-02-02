@@ -56,3 +56,35 @@ jobs:
         run: cd ./packages/api && npm install
       - name: Test
         run: cd ./packages/api && npm run test
+
+  test-e2e:
+    needs: [lint, build]
+    runs-on: ubuntu-20.04
+    services:
+      mariadb:
+        image: mariadb:10.6
+        env:
+          MARIADB_ROOT_PASSWORD: ${{ secrets.DATABASE_PASSWORD_TEST }}
+          MARIADB_DATABASE: ${{ secrets.DATABASE_NAME_TEST }}
+          MARIADB_USER: ${{ secrets.DATABASE_USERNAME_TEST }}
+          MARIADB_PASSWORD: ${{ secrets.DATABASE_PASSWORD_TEST }}
+        ports:
+          - 3306:3306
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          cache: "npm"
+          node-version: "20"
+      - name: Install dependencies
+        run: cd ./packages/api && npm install
+        env:
+          DATABASE_NAME: ${{ secrets.DATABASE_NAME_TEST }}
+          DATABASE_PORT: 3306
+          DATABASE_HOST: localhost
+          DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME_TEST }}
+          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD_TEST }}
+      - name: Test e2e
+        run: cd ./packages/api && npm run test:e2e
