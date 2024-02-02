@@ -77,6 +77,25 @@ describe('UserController (e2e)', () => {
     });
   });
 
+  describe('PUT /:id', () => {
+    it('should update a user', async () => {
+      const user = UserMother.create().toPrimitives();
+      await userRepository.save(user);
+
+      const { body, status } = await request(app.getHttpServer()).put(
+        `/user/${user.id}`,
+      );
+
+      expect(status).toBe(HttpStatus.OK);
+      expect(body.name).toBe(user.name);
+      expect(body.surnames).toBe(user.surnames);
+      expect(body.email).toBe(user.email);
+      expect(body.role).toBe(user.role);
+      expect(body.id).toBeDefined();
+      expect(body.password).not.toBeDefined();
+    });
+  });
+
   describe('DELETE /:id', () => {
     it('should delete a user', async () => {
       const user = UserMother.create();

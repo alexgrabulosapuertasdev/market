@@ -7,6 +7,7 @@ import { UserFindAll } from '../application/find-all/user.find-all';
 import { UserCreate } from '../application/create/user.create';
 import { UserRepository } from '../domain/ports/user.repository';
 import { UserDelete } from '../application/delete/user.delete';
+import { UserUpdate } from '../application/update/user.update';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserTypeorm])],
@@ -15,6 +16,7 @@ import { UserDelete } from '../application/delete/user.delete';
     UserCreate,
     UserDelete,
     UserFindAll,
+    UserUpdate,
     { provide: UserRepository, useClass: UserTypeormRepository },
   ],
 })
