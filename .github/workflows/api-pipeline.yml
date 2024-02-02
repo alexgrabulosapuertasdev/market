@@ -40,3 +40,19 @@ jobs:
         with:
           name: dist
           path: dist
+
+  test:
+    needs: [lint, build]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          cache: "npm"
+          node-version: "20"
+      - name: Install dependencies
+        run: cd ./packages/api && npm install
+      - name: Test
+        run: cd ./packages/api && npm run test
