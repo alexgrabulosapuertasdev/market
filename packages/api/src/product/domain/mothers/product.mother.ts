@@ -19,7 +19,7 @@ interface ProductParams {
 }
 
 export class ProductMother {
-  static create(params?: Partial<Product>): Product {
+  static create(params?: Partial<ProductParams>): Product {
     const primitives: ProductParams = {
       id: ProductIdMother.create().value,
       name: ProductNameMother.create().value,
