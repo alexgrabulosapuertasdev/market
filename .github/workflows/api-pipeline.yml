@@ -73,9 +73,9 @@ jobs:
       mongodb:
         image: mongo
         env:
-          MONGO_INITDB_ROOT_USERNAME: ${{ secrets.MONGODB_IMAGE_USERNAME }}
-          MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.MONGODB_IMAGE_PASSWORD }}
-          MONGO_INITDB_DATABASE: ${{ secrets.MONGODB_IMAGE_NAME }}
+          MONGO_INITDB_ROOT_USERNAME: ${{ secrets.MONGODB_IMAGE_USERNAME_TEST }}
+          MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.MONGODB_IMAGE_PASSWORD_TEST }}
+          MONGO_INITDB_DATABASE: ${{ secrets.MONGODB_IMAGE_NAME_TEST }}
         ports:
           - 27017:27017
     steps:
