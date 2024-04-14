@@ -7,5 +7,10 @@ export interface ProductResponse {
   category: PRODUCT_CATEGORY;
   price: number;
   stock: number;
-  imageBase64: string;
+  image: {
+    originalname: string;
+    mimetype: string;
+    size: number;
+    base64: string;
+  };
 }

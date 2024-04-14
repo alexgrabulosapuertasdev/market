@@ -7,5 +7,10 @@ export interface ProductCreateRequest {
   category: PRODUCT_CATEGORY;
   price: number;
   stock: number;
-  imageOriginalname: string;
+  image: {
+    originalname: string;
+    mimetype: string;
+    size: number;
+    base64: string;
+  };
 }

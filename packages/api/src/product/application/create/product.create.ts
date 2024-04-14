@@ -3,7 +3,6 @@ import { ProductCreateRequest } from './product.create.request';
 import { Product } from '../../domain/aggregates/product';
 import { ProductResponse } from '../../domain/interface/product.response';
 import { ProductRepository } from '../../domain/ports/product.repository';
-import { getImageBase64 } from '../../domain/services/get-image-base64';
 
 @Injectable()
 export class ProductCreate {
@@ -15,8 +14,7 @@ export class ProductCreate {
     const product = Product.create(productCreateRequest);
 
     const productResponse = await this.productRepository.save(product);
-    const imageBase64 = getImageBase64(productCreateRequest.imageOriginalname);
 
-    return { ...productResponse.toPrimitives(), imageBase64 };
+    return productResponse.toPrimitives();
   }
 }

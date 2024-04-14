@@ -64,12 +64,20 @@ jobs:
       mariadb:
         image: mariadb:10.6
         env:
-          MARIADB_ROOT_PASSWORD: ${{ secrets.DATABASE_PASSWORD_TEST }}
-          MARIADB_DATABASE: ${{ secrets.DATABASE_NAME_TEST }}
-          MARIADB_USER: ${{ secrets.DATABASE_USERNAME_TEST }}
-          MARIADB_PASSWORD: ${{ secrets.DATABASE_PASSWORD_TEST }}
+          MARIADB_ROOT_PASSWORD: ${{ secrets.MARIADB_PASSWORD_TEST }}
+          MARIADB_DATABASE: ${{ secrets.MARIADB_NAME_TEST }}
+          MARIADB_USER: ${{ secrets.MARIADB_USERNAME_TEST }}
+          MARIADB_PASSWORD: ${{ secrets.MARIADB_PASSWORD_TEST }}
         ports:
           - 3306:3306
+      mongodb:
+        image: mongo
+        env:
+          MONGO_INITDB_ROOT_USERNAME: ${{ secrets.MONGODB_IMAGE_USERNAME }}
+          MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.MONGODB_IMAGE_PASSWORD }}
+          MONGO_INITDB_DATABASE: ${{ secrets.MONGODB_IMAGE_NAME }}
+        ports:
+          - 27017:27017
     steps:
       - uses: actions/checkout@v2
         with:
@@ -81,11 +89,16 @@ jobs:
       - name: Install dependencies
         run: |
           cd ./packages/api
-          echo "DATABASE_NAME=${{ secrets.DATABASE_NAME_TEST }}" >> .env.test
-          echo "DATABASE_PORT=3306" >> .env.test
-          echo "DATABASE_HOST=${{ secrets.DATABASE_HOST_TEST }}" >> .env.test
-          echo "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME_TEST }}" >> .env.test
-          echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD_TEST }}" >> .env.test
+          echo "MARIADB_NAME=${{ secrets.MARIADB_NAME_TEST }}" >> .env.test
+          echo "MARIADB_PORT=3306" >> .env.test
+          echo "MARIADB_HOST=${{ secrets.MARIADB_HOST_TEST }}" >> .env.test
+          echo "MARIADB_USERNAME=${{ secrets.MARIADB_USERNAME_TEST }}" >> .env.test
+          echo "MARIADB_PASSWORD=${{ secrets.MARIADB_PASSWORD_TEST }}" >> .env.test
+          echo "MONGODB_IMAGE_HOST=${{ secrets.MONGODB_IMAGE_HOST_TEST }}" >> .env.test
+          echo "MONGODB_IMAGE_NAME=${{ secrets.MONGODB_IMAGE_NAME_TEST }}" >> .env.test
+          echo "MONGODB_IMAGE_PORT=27017" >> .env.test
+          echo "MONGODB_IMAGE_USERNAME=${{ secrets.MONGODB_IMAGE_USERNAME_TEST }}" >> .env.test
+          echo "MONGODB_IMAGE_PASSWORD=${{ secrets.MONGODB_IMAGE_PASSWORD_TEST }}" >> .env.test
           npm install
       - name: Test e2e
         run: cd ./packages/api && npm run test:e2e

@@ -7,11 +7,11 @@ export class MariadbConfig {
   static createConnection() {
     return TypeOrmModule.forRoot({
       type: 'mariadb',
-      database: process.env['DATABASE_NAME'],
-      username: process.env['DATABASE_USERNAME'],
-      password: process.env['DATABASE_PASSWORD'],
-      port: Number(process.env['DATABASE_PORT']),
-      host: process.env['DATABASE_HOST'],
+      database: process.env['MARIADB_NAME'],
+      username: process.env['MARIADB_USERNAME'],
+      password: process.env['MARIADB_PASSWORD'],
+      port: Number(process.env['MARIADB_PORT']),
+      host: process.env['MARIADB_HOST'],
       synchronize: true,
       entities: [
         join(__dirname, '..', '..', '..', '**', 'entity', '*.entity{.ts,.js}'),

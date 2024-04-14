@@ -1,14 +1,14 @@
+import { faker } from '@faker-js/faker';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { resolve } from 'path';
-import { read, readFileSync } from 'fs';
 import * as request from 'supertest';
 import { Repository } from 'typeorm';
 import { ProductMother } from '../src/product/domain/mothers/product.mother';
 import { ProductTypeorm } from '../src/product/infrastructure/persistence/entity/product-typeorm.entity';
 import { MariadbConfig } from '../src/shared/infrastructure/persistence/mariadb.config';
+import { MongoImageConfig } from '../src/shared/infrastructure/persistence/mongo-image.config';
 import { ProductModule } from '../src/product/infrastructure/product.module';
 
 describe('ProductController (e2e)', () => {
@@ -21,6 +21,7 @@ describe('ProductController (e2e)', () => {
       imports: [
         ConfigModule.forRoot({ envFilePath: '.env.test' }),
         MariadbConfig.createConnection(),
+        MongoImageConfig.createConnection(),
         ProductModule,
       ],
     }).compile();
@@ -45,12 +46,10 @@ describe('ProductController (e2e)', () => {
 
   describe('POST /', () => {
     it('should create a product', async () => {
-      const imageOriginalname = 'image-to-test.jpg';
       const { name, description, category, price, stock } =
         ProductMother.create().toPrimitives();
-      const imagePath = resolve('test', imageOriginalname);
-      const image = readFileSync(imagePath);
-      const imageBase64 = Buffer.from(image).toString('base64');
+      const imageOriginalname = 'image.jpg';
+      const imageBuffer = Buffer.from(faker.image.avatar());
 
       const { body, status } = await request(app.getHttpServer())
         .post('/product')
@@ -60,7 +59,7 @@ describe('ProductController (e2e)', () => {
         .field('category', category)
         .field('price', price)
         .field('stock', stock)
-        .attach('image', imagePath);
+        .attach('image', imageBuffer, { filename: imageOriginalname });
 
       expect(status).toBe(HttpStatus.CREATED);
       expect(body.id).toBeDefined();
@@ -69,11 +68,10 @@ describe('ProductController (e2e)', () => {
       expect(body.category).toBe(category);
       expect(body.price).toBe(price);
       expect(body.stock).toBe(stock);
-      expect(body.imageOriginalname).toBe(imageOriginalname);
-      expect(body.imageBase64).toBe(imageBase64);
-      expect(
-        readFileSync(resolve('uploads', 'products', imageOriginalname)),
-      ).toEqual(image);
+      expect(body.image.originalname).toBe(imageOriginalname);
+      expect(body.image.mimetype).toBe('image/jpeg');
+      expect(body.image.size).toBeDefined();
+      expect(body.image.base64).toBe(imageBuffer.toString('base64'));
     });
   });
 });

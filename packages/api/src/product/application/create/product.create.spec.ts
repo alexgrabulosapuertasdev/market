@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ProductCreate } from './product.create';
 import { ProductMother } from '../../domain/mothers/product.mother';
 import { ProductRepository } from '../../domain/ports/product.repository';
-import * as getImageBase64Module from '../../domain/services/get-image-base64';
 
 describe('ProductCreate', () => {
   let productCreate: ProductCreate;
@@ -32,14 +31,9 @@ describe('ProductCreate', () => {
   it('should create a product', async () => {
     const product = ProductMother.create();
     productRepository.save.mockResolvedValue(product);
-    const imageBase64 = 'base64';
-    jest
-      .spyOn(getImageBase64Module, 'getImageBase64')
-      .mockReturnValue(imageBase64);
-
     const response = await productCreate.run(product.toPrimitives());
 
     expect(productRepository.save).toHaveBeenCalledWith(product);
-    expect(response).toEqual({ ...product.toPrimitives(), imageBase64 });
+    expect(response).toEqual(product.toPrimitives());
   });
 });

@@ -5,11 +5,11 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { randomUUID } from 'crypto';
 import { ProductCreateDto } from './dto/product-create.dto';
 import { ProductCreate } from '../application/create/product.create';
 import { ProductResponse } from '../domain/interface/product.response';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('product')
 export class ProductController {
@@ -22,6 +22,7 @@ export class ProductController {
     @UploadedFile() image: Express.Multer.File,
   ): Promise<ProductResponse> {
     const { name, description, category, price, stock } = productCreateDto;
+    const { originalname, mimetype, size, buffer } = image;
     const request = {
       name,
       description,
@@ -29,7 +30,12 @@ export class ProductController {
       price: Number(price),
       stock: Number(stock),
       id: randomUUID(),
-      imageOriginalname: image.originalname,
+      image: {
+        originalname,
+        mimetype,
+        size,
+        base64: buffer.toString('base64'),
+      },
     };
 
     return this.productCreate.run(request);

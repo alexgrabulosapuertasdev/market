@@ -30,9 +30,6 @@ export class ProductTypeorm {
   @Column()
   stock: number;
 
-  @Column()
-  imageOriginalname: string;
-
   @CreateDateColumn()
   createdAt: Date;
 

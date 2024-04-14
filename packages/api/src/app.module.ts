@@ -3,11 +3,13 @@ import { MariadbConfig } from './shared/infrastructure/persistence/mariadb.confi
 import { ConfigModule } from '@nestjs/config';
 import { ProductModule } from './product/infrastructure/product.module';
 import { UserModule } from './user/infrastructure/user.module';
+import { MongoImageConfig } from './shared/infrastructure/persistence/mongo-image.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
     MariadbConfig.createConnection(),
+    MongoImageConfig.createConnection(),
     ProductModule,
     UserModule,
   ],
