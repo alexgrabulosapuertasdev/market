@@ -1,0 +1,44 @@
+<p-dialog [(visible)]="isVisible" [style]="{ width: '80vw', height: '80vh' }" (onHide)="closeModal()">
+  <ng-template pTemplate="header">
+    <h2 class="text-primary">Añade un usuario</h2>
+  </ng-template>
+
+  <ng-template pTemplate="body">
+    <form [formGroup]="formGroup" (submit)="submit()">
+      <fieldset>
+        <label for="name">Nombre</label>
+        <input pInputText formControlName="name" id="name" type="text" required>
+        <small *ngIf="isSubmitted && !formGroup.value['name']" class="text-danger">Este campo es obligatorio</small>
+      </fieldset>
+  
+      <fieldset>
+        <label for="surnames">Apellidos</label>
+        <input pInputText formControlName="surnames" id="surnames" type="text" required>
+        <small *ngIf="isSubmitted && !formGroup.value['surnames']" class="text-danger">Este campo es obligatorio</small>
+      </fieldset>
+  
+      <fieldset>
+        <label for="email">Correo electrónico</label>
+        <input pInputText formControlName="email" id="email" type="email" required>
+        <small *ngIf="isSubmitted && !formGroup.value['email']" class="text-danger">Este campo es obligatorio</small>
+      </fieldset>
+  
+      <fieldset>
+        <label for="password">Contraseña</label>
+        <input pInputText formControlName="password" id="surnames" type="password" required>
+        <small *ngIf="isSubmitted && !formGroup.value['password']" class="text-danger">Este campo es obligatorio</small>
+      </fieldset>
+  
+      <fieldset>
+        <label for="role">Rol</label>
+        <p-selectButton [options]="userRoleOptions" optionLabel="label" optionValue="value" formControlName="role" />
+      </fieldset>
+    </form>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <p-button (click)="submit()" icon="pi pi-save" label="Añadir" styleClass="p-button-success" />
+  </ng-template>
+</p-dialog>
+
+<p-toast></p-toast>

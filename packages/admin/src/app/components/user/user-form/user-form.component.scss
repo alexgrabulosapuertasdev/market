@@ -1,0 +1,22 @@
+form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px 16px;
+
+  fieldset {
+    border: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0;
+  }
+
+  ::ng-deep {
+    p-selectButton {
+      & > div {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  }
+}

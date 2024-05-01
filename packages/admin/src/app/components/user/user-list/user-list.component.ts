@@ -4,16 +4,20 @@ import { UserResponse } from "../../../shared/interfaces/user/user-response.inte
 import { MessageService } from "primeng/api";
 import { TableModule } from "primeng/table";
 import { CardModule } from "primeng/card";
+import { ButtonModule } from "primeng/button";
+import { UserFormComponent } from "../user-form/user-form.component";
+import { CommonModule } from "@angular/common";
 
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
   standalone: true,
   providers: [MessageService],
-  imports: [CardModule, TableModule],
+  imports: [ButtonModule, CardModule, CommonModule, TableModule, UserFormComponent],
 })
 export class UserListComponent implements OnInit {
   users: UserResponse[] = [];
+  modalUserFormIsOpened = false;
 
   constructor(
     private readonly messageService: MessageService,
@@ -37,5 +41,13 @@ export class UserListComponent implements OnInit {
         });
       },
     });
+  }
+
+  openModalAddUser(): void {
+    this.modalUserFormIsOpened = true;
+  }
+
+  closeModalAddUser(): void {
+    this.modalUserFormIsOpened = false;
   }
 }

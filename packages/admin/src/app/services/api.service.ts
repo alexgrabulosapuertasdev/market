@@ -12,4 +12,8 @@ export class ApiService {
   protected get<T>(path: string): Observable<T> {
     return this.httpClient.get(`${environment.API_URL}/${path}`).pipe(map(res => res as T));
   }
+
+  protected post<T>(path: string, body?: object): Observable<T> {
+    return this.httpClient.post(`${environment.API_URL}/${path}`, body).pipe(map(res => res as T));
+  }
 }
