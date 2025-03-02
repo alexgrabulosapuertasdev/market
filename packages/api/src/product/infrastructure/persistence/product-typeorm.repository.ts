@@ -17,6 +17,24 @@ export class ProductTypeormRepository implements ProductRepository {
     private readonly productImageModel: Model<ProductImageMongoose>,
   ) {}
 
+  async findAll(): Promise<Product[]> {
+    const products = await this.productRepository.find();
+
+    return Promise.all(
+      products.map(async (product) => {
+        const productImage = await this.productImageModel.findOne({
+          productId: product.id,
+        });
+        const productResponse = {
+          ...product,
+          image: productImage,
+        };
+
+        return Product.create(productResponse);
+      }),
+    );
+  }
+
   async save(product: Product): Promise<Product> {
     const {
       image: { originalname, mimetype, size, base64 },

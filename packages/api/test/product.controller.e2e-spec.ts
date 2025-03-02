@@ -44,6 +44,26 @@ describe('ProductController (e2e)', () => {
     await testingModule.close();
   });
 
+  describe('GET /', () => {
+    it('should return an array of products', async () => {
+      const products = [
+        ProductMother.create().toPrimitives(),
+        ProductMother.create().toPrimitives(),
+      ].sort((a, b) => a.id.localeCompare(b.id));
+
+      await productRepository.save(products);
+
+      const { body, status } = await request(app.getHttpServer()).get(
+        '/product',
+      );
+
+      expect(status).toBe(HttpStatus.OK);
+
+      const response = body.sort((a, b) => a.id.localeCompare(b.id));
+      expect(response).toEqual(products);
+    });
+  });
+
   describe('POST /', () => {
     it('should create a product', async () => {
       const { name, description, category, price, stock } =

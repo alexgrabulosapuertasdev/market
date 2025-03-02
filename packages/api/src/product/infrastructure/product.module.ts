@@ -5,6 +5,7 @@ import { ProductTypeorm } from './persistence/entity/product-typeorm.entity';
 import { ProductController } from './product.controller';
 import { ProductCreate } from '../application/create/product.create';
 import { ProductRepository } from '../domain/ports/product.repository';
+import { ProductFindAll } from '../application/find-all/product.find-all';
 import { ProductTypeormRepository } from './persistence/product-typeorm.repository';
 import {
   ProductImageMongoose,
@@ -25,6 +26,7 @@ import {
   controllers: [ProductController],
   providers: [
     ProductCreate,
+    ProductFindAll,
     { provide: ProductRepository, useClass: ProductTypeormRepository },
   ],
 })

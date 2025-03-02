@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -10,10 +11,19 @@ import { ProductCreateDto } from './dto/product-create.dto';
 import { ProductCreate } from '../application/create/product.create';
 import { ProductResponse } from '../domain/interface/product.response';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ProductFindAll } from '../application/find-all/product.find-all';
 
 @Controller('product')
 export class ProductController {
-  constructor(private readonly productCreate: ProductCreate) {}
+  constructor(
+    private readonly productCreate: ProductCreate,
+    private readonly productFindAll: ProductFindAll,
+  ) {}
+
+  @Get()
+  findAll(): Promise<ProductResponse[]> {
+    return this.productFindAll.run();
+  }
 
   @Post()
   @UseInterceptors(FileInterceptor('image'))
