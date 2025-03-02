@@ -16,4 +16,8 @@ export class UserService extends ApiService {
   create(body: UserCreate): Observable<UserResponse> {
     return this.post<UserResponse>(API_URL.USER, body);
   }
+
+  delete(id: string): Observable<void> {
+    return this.remove<void>(`${API_URL.USER}/${id}`);
+  }
 }

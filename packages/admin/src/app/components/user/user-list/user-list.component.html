@@ -14,6 +14,7 @@
         <th pSortableColumn="surnames">Apellidos <p-sortIcon field="surname"></p-sortIcon></th>
         <th pSortableColumn="email">Correo electrónico <p-sortIcon field="email"></p-sortIcon></th>
         <th pSortableColumn="role">Rol <p-sortIcon field="role"></p-sortIcon></th>
+        <th [width]="1"></th>
       </tr>
     </ng-template>
   
@@ -23,9 +24,14 @@
         <td>{{ user.surnames }}</td>
         <td>{{ user.email }}</td>
         <td>{{ user.role }}</td>
+        <td>
+          <p-button (click)="deleteUser(user)" icon="pi pi-trash" styleClass="text-red-500 p-button-danger bg-transparent border-none border-circle" />
+        </td>
       </tr>
     </ng-template>
   </p-table>
 </p-card>
+
+<p-confirmDialog></p-confirmDialog> 
 
 <app-user-form [isVisible]="modalUserFormIsOpened" (closeModalEvent)="closeModalAddUser()"></app-user-form>
