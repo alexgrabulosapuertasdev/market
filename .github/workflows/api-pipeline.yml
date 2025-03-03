@@ -15,10 +15,10 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          cache: "npm"
-          node-version: "20"
+          cache: 'npm'
+          node-version: '20'
       - name: Install dependencies
-        run: cd ./packages/api && npm install
+        run: npm install
       - name: Lint
         run: cd ./packages/api && npm run lint
 
@@ -30,8 +30,8 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          cache: "npm"
-          node-version: "20"
+          cache: 'npm'
+          node-version: '20'
       - name: Install dependencies
         run: cd ./packages/api && npm install
       - name: Build
@@ -50,8 +50,8 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          cache: "npm"
-          node-version: "20"
+          cache: 'npm'
+          node-version: '20'
       - name: Install dependencies
         run: cd ./packages/api && npm install
       - name: Test
@@ -84,8 +84,8 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          cache: "npm"
-          node-version: "20"
+          cache: 'npm'
+          node-version: '20'
       - name: Install dependencies
         run: |
           cd ./packages/api
