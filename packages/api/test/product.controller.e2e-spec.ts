@@ -60,7 +60,17 @@ describe('ProductController (e2e)', () => {
       expect(status).toBe(HttpStatus.OK);
 
       const response = body.sort((a, b) => a.id.localeCompare(b.id));
-      expect(response).toEqual(products);
+      expect(
+        response.map(({ image, ...product }) => ({
+          ...product,
+          image: {
+            originalname: image.originalname,
+            mimetype: image.mimetype,
+            size: image.size,
+            base64: image.base64,
+          },
+        })),
+      ).toEqual(products);
     });
   });
 
