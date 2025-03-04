@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import * as request from 'supertest';
@@ -10,11 +11,14 @@ import { ProductTypeorm } from '../src/product/infrastructure/persistence/entity
 import { MariadbConfig } from '../src/shared/infrastructure/persistence/mariadb.config';
 import { MongoImageConfig } from '../src/shared/infrastructure/persistence/mongo-image.config';
 import { ProductModule } from '../src/product/infrastructure/product.module';
+import { ProductImageMongoose } from '../src/product/infrastructure/persistence/entity/product-image-mongoose.model';
+import { Model } from 'mongoose';
 
 describe('ProductController (e2e)', () => {
   let app: INestApplication;
   let testingModule: TestingModule;
   let productRepository: Repository<ProductTypeorm>;
+  let productImageModel: Model<ProductImageMongoose>;
 
   beforeAll(async () => {
     testingModule = await Test.createTestingModule({
@@ -30,16 +34,22 @@ describe('ProductController (e2e)', () => {
       getRepositoryToken(ProductTypeorm),
     );
 
+    productImageModel = testingModule.get<Model<ProductImageMongoose>>(
+      getModelToken(ProductImageMongoose.name),
+    );
+
     app = testingModule.createNestApplication();
     await app.init();
   });
 
   beforeEach(async () => {
     await productRepository.query('DELETE FROM product;');
+    await productImageModel.deleteMany({});
   });
 
   afterAll(async () => {
     await productRepository.query('DELETE FROM product;');
+    await productImageModel.deleteMany({});
     await app.close();
     await testingModule.close();
   });
@@ -51,7 +61,26 @@ describe('ProductController (e2e)', () => {
         ProductMother.create().toPrimitives(),
       ].sort((a, b) => a.id.localeCompare(b.id));
 
-      await productRepository.save(products);
+      await productRepository.save(
+        products.map(({ id, name, description, category, price, stock }) => ({
+          id,
+          name,
+          description,
+          category,
+          price,
+          stock,
+        })),
+      );
+
+      await productImageModel.insertMany(
+        products.map(({ id, image }) => ({
+          productId: id,
+          originalname: image.originalname,
+          mimetype: image.mimetype,
+          size: image.size,
+          base64: image.base64,
+        })),
+      );
 
       const { body, status } = await request(app.getHttpServer()).get(
         '/product',
