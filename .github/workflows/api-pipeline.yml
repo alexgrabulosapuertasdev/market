@@ -1,4 +1,4 @@
-name: Pipeline
+name: PipelineApi
 
 on:
   push:
@@ -7,21 +7,6 @@ on:
     branches: [master]
 
 jobs:
-  lint:
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          cache: 'npm'
-          node-version: '20'
-      - name: Install dependencies
-        run: npm install
-      - name: Lint
-        run: cd ./packages/api && npm run lint
-
   build:
     runs-on: ubuntu-20.04
     steps:
@@ -42,7 +27,7 @@ jobs:
           path: dist
 
   test:
-    needs: [lint, build]
+    needs: [build]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -58,7 +43,7 @@ jobs:
         run: cd ./packages/api && npm run test
 
   test-e2e:
-    needs: [lint, build]
+    needs: [build]
     runs-on: ubuntu-20.04
     services:
       mariadb:

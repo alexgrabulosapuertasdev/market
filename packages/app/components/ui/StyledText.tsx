@@ -3,7 +3,7 @@ import { StyleSheet, Text } from 'react-native';
 interface Props {
   children: any;
   format?: 'title' | 'subtitle' | 'text';
-  style?: {};
+  style?: object;
 }
 
 export default function StyledText({ children, format, style }: Props) {
