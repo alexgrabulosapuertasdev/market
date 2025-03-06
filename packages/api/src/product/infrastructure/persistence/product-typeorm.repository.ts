@@ -21,7 +21,7 @@ export class ProductTypeormRepository implements ProductRepository {
     const products = await this.productRepository
       .createQueryBuilder('product')
       .where('product.name LIKE :filter OR product.category LIKE :filter', {
-        filter: `%${filter}%`,
+        filter: filter ? `%${filter}%` : '%',
       })
       .getMany();
 

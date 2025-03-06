@@ -84,7 +84,7 @@ describe('ProductController (e2e)', () => {
       );
 
       const { body, status } = await request(app.getHttpServer()).get(
-        '/product?filter=',
+        '/product',
       );
 
       expect(status).toBe(HttpStatus.OK);
