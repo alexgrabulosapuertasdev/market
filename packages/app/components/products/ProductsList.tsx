@@ -1,11 +1,13 @@
 import { FlatList, StyleSheet, View } from 'react-native';
-import ProductItem from '../../components/products/ProductItem';
-import StyledText from '../../components/ui/StyledText';
-import { useProducts } from '../../hooks/useProducts';
+import ProductItem from './ProductItem';
+import StyledText from '../ui/StyledText';
+import { ProductResponse } from '../../models/interfaces/Product';
 
-export default function ProductsList() {
-  const { products } = useProducts();
+interface Props {
+  products: ProductResponse[];
+}
 
+export default function ProductsList({ products }: Props) {
   return (
     <View style={styles.container}>
       <StyledText format="title" style={styles.title}>

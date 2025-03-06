@@ -1,10 +1,10 @@
 import { StyleSheet, View } from 'react-native';
-import ProductsList from './pages/products/ProductsList';
+import Products from './pages/products/Products';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <ProductsList />
+      <Products />
     </View>
   );
 }

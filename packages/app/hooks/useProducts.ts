@@ -4,12 +4,14 @@ import { findAll } from '../services/product.service';
 
 export function useProducts() {
   const [products, setProducts] = useState<ProductResponse[]>([]);
+  const [filter, setFilter] = useState<string>(undefined);
 
   useEffect(() => {
-    findAll().then((products) => setProducts(products));
-  }, []);
+    findAll(filter).then((products) => setProducts(products));
+  }, [filter]);
 
   return {
     products,
+    setFilter,
   };
 }
