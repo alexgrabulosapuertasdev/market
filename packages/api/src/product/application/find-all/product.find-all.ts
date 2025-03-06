@@ -6,8 +6,8 @@ import { ProductResponse } from '../../domain/interface/product.response';
 export class ProductFindAll {
   constructor(private readonly productRepository: ProductRepository) {}
 
-  async run(): Promise<ProductResponse[]> {
-    const products = await this.productRepository.findAll();
+  async run(filter?: string): Promise<ProductResponse[]> {
+    const products = await this.productRepository.findAll(filter);
 
     return products.map((product) => product.toPrimitives());
   }

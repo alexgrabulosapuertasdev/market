@@ -3,11 +3,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity({ name: 'product' })
+@Index('INDEX_PRODUCT_NAME_CATEGORY', ['name', 'category'])
 export class ProductTypeorm {
   @PrimaryGeneratedColumn('uuid')
   id: string;

@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Post,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -21,8 +22,8 @@ export class ProductController {
   ) {}
 
   @Get()
-  findAll(): Promise<ProductResponse[]> {
-    return this.productFindAll.run();
+  findAll(@Query('filter') filter?: string): Promise<ProductResponse[]> {
+    return this.productFindAll.run(filter);
   }
 
   @Post()

@@ -17,8 +17,13 @@ export class ProductTypeormRepository implements ProductRepository {
     private readonly productImageModel: Model<ProductImageMongoose>,
   ) {}
 
-  async findAll(): Promise<Product[]> {
-    const products = await this.productRepository.find();
+  async findAll(filter?: string): Promise<Product[]> {
+    const products = await this.productRepository
+      .createQueryBuilder('product')
+      .where('product.name LIKE :filter OR product.category LIKE :filter', {
+        filter: `%${filter}%`,
+      })
+      .getMany();
 
     return Promise.all(
       products.map(async (product) => {

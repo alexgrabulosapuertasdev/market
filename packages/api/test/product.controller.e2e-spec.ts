@@ -7,6 +7,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import * as request from 'supertest';
 import { Repository } from 'typeorm';
 import { ProductMother } from '../src/product/domain/mothers/product.mother';
+import { ProductNameMother } from '../src/product/domain/mothers/product-name.mother';
 import { ProductTypeorm } from '../src/product/infrastructure/persistence/entity/product-typeorm.entity';
 import { MariadbConfig } from '../src/shared/infrastructure/persistence/mariadb.config';
 import { MongoImageConfig } from '../src/shared/infrastructure/persistence/mongo-image.config';
@@ -100,6 +101,61 @@ describe('ProductController (e2e)', () => {
           },
         })),
       ).toEqual(products);
+    });
+  });
+
+  describe('GET /?filter', () => {
+    it('should return an array of products filtered', async () => {
+      const filter = ProductNameMother.create().value;
+      const validProducts = [
+        ProductMother.create({ name: filter }).toPrimitives(),
+        ProductMother.create({ name: filter }).toPrimitives(),
+        ProductMother.create({ name: filter + '2' }).toPrimitives(),
+      ].sort((a, b) => a.id.localeCompare(b.id));
+      const products = [
+        ...validProducts,
+        ProductMother.create({ name: 'UNVALID' }).toPrimitives(),
+      ];
+
+      await productRepository.save(
+        products.map(({ id, name, description, category, price, stock }) => ({
+          id,
+          name,
+          description,
+          category,
+          price,
+          stock,
+        })),
+      );
+
+      await productImageModel.insertMany(
+        products.map(({ id, image }) => ({
+          productId: id,
+          originalname: image.originalname,
+          mimetype: image.mimetype,
+          size: image.size,
+          base64: image.base64,
+        })),
+      );
+
+      const { body, status } = await request(app.getHttpServer()).get(
+        '/product',
+      );
+
+      expect(status).toBe(HttpStatus.OK);
+
+      const response = body.sort((a, b) => a.id.localeCompare(b.id));
+      expect(
+        response.map(({ image, ...product }) => ({
+          ...product,
+          image: {
+            originalname: image.originalname,
+            mimetype: image.mimetype,
+            size: image.size,
+            base64: image.base64,
+          },
+        })),
+      ).toEqual(validProducts);
     });
   });
 
