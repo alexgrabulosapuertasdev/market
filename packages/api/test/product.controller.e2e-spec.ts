@@ -84,7 +84,7 @@ describe('ProductController (e2e)', () => {
       );
 
       const { body, status } = await request(app.getHttpServer()).get(
-        '/product',
+        '/product?filter=',
       );
 
       expect(status).toBe(HttpStatus.OK);
@@ -139,7 +139,7 @@ describe('ProductController (e2e)', () => {
       );
 
       const { body, status } = await request(app.getHttpServer()).get(
-        '/product',
+        `/product?filter=${filter}`,
       );
 
       expect(status).toBe(HttpStatus.OK);
