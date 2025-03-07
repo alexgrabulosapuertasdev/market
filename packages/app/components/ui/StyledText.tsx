@@ -1,28 +1,35 @@
 import { StyleSheet, Text } from 'react-native';
+import { THEME } from '../../theme';
 
 interface Props {
   children: any;
-  format?: 'title' | 'subtitle' | 'text';
+  format?: 'title' | 'subtitle' | 'text' | 'small';
   style?: object;
 }
 
 export default function StyledText({ children, format, style }: Props) {
-  const formatStyles = format ? styles[format] : {};
+  const formatStyles = format ?? 'text';
 
-  return <Text style={{ ...formatStyles, ...style }}>{children}</Text>;
+  return <Text style={{ ...styles[formatStyles], ...style }}>{children}</Text>;
 }
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 24,
-    fontWeight: 600,
+    color: THEME.colors.primary,
+    fontWeight: '700',
+    fontSize: THEME.fontSizes.title,
   },
   subtitle: {
-    fontSize: 18,
+    fontSize: THEME.fontSizes.subtitle,
     fontWeight: 'bold',
   },
   text: {
-    fontSize: 14,
-    color: '#555',
+    fontSize: THEME.fontSizes.text,
+    color: THEME.colors.textPrimary,
+  },
+  small: {
+    fontSize: THEME.fontSizes.small,
+    fontWeight: 'bold',
+    color: THEME.colors.primary,
   },
 });

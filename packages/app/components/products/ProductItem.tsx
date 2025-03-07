@@ -1,65 +1,41 @@
 import { Image, StyleSheet, View } from 'react-native';
 import { ProductResponse } from '../../models/interfaces/Product';
 import StyledText from '../ui/StyledText';
+import { THEME } from '../../theme';
 
 interface Props {
   product: ProductResponse;
+  style?: object;
 }
 
-export default function ProductItem({ product }: Props) {
+export default function ProductItem({ product, style }: Props) {
   return (
-    <View style={styles.container}>
+    <View style={{ ...styles.container, ...style }}>
       <Image
         source={{ uri: `data:image/jpeg;base64,${product.image.base64}` }}
         style={{ ...styles.image, width: '100%' }}
       />
 
-      <View style={styles.textContainer}>
-        <StyledText format="subtitle" style={styles.productName}>
-          {product.name}
-        </StyledText>
+      <StyledText format="subtitle">{product.name}</StyledText>
 
-        <StyledText format="text" style={styles.productDescription}>
-          {product.description}
-        </StyledText>
+      <StyledText>{product.description}</StyledText>
 
-        <StyledText style={styles.productPrice}>{product.price} €</StyledText>
-      </View>
+      <StyledText format="small">{product.price} €</StyledText>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
-    marginBottom: 20,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.5,
-    shadowRadius: 4,
-    elevation: 2, // Sombra en Android
-    width: 300,
+    padding: THEME.padding.item,
+    backgroundColor: THEME.colors.backgroundSecundary,
+    borderRadius: THEME.borderRadius.medium,
+    borderColor: THEME.colors.details,
+    borderWidth: 1,
+    gap: THEME.gap.small,
   },
   image: {
     aspectRatio: 1,
-    borderRadius: 10,
-    marginRight: 15,
-  },
-  textContainer: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  productName: {
-    marginBottom: 5,
-  },
-  productDescription: {
-    marginBottom: 10,
-  },
-  productPrice: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#4caf50',
+    borderRadius: THEME.borderRadius.medium,
   },
 });

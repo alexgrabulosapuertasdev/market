@@ -1,45 +1,42 @@
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, useWindowDimensions } from 'react-native';
 import ProductItem from './ProductItem';
-import StyledText from '../ui/StyledText';
 import { ProductResponse } from '../../models/interfaces/Product';
+import { THEME } from '../../theme';
 
 interface Props {
   products: ProductResponse[];
 }
 
-export default function ProductsList({ products }: Props) {
-  return (
-    <View style={styles.container}>
-      <StyledText format="title" style={styles.title}>
-        Products list
-      </StyledText>
-      <FlatList
-        style={styles.productList}
-        data={products}
-        keyExtractor={(product) => product.id}
-        renderItem={({ item }) => (
-          <>
-            <ProductItem product={item} />
-          </>
-        )}
-        horizontal={true}
-        contentContainerStyle={styles.productList}
-      />
-    </View>
-  );
+function getResponsiveProperties(width: number, spacing: number) {
+  const minCardWidth = 300;
+  const numColumns = Math.floor(width / minCardWidth);
+  const cardWidth = (width - spacing * (numColumns + 1)) / numColumns;
+
+  return { cardWidth, numColumns };
 }
 
-const styles = StyleSheet.create({
-  container: {
-    width: 1000,
-  },
-  title: {
-    marginBottom: 24,
-  },
-  productList: {
-    width: 1000,
-    display: 'flex',
-    gap: '16px 24px',
-    flexWrap: 'wrap',
-  },
-});
+export default function ProductsList({ products }: Props) {
+  const gap = THEME.gap.large;
+  const { width } = useWindowDimensions();
+  const { cardWidth, numColumns } = getResponsiveProperties(width, gap);
+  const columnWrapperStyle = numColumns > 1 ? { gap } : undefined;
+
+  return (
+    <FlatList
+      contentContainerStyle={{ gap }}
+      columnWrapperStyle={columnWrapperStyle}
+      showsVerticalScrollIndicator={false}
+      data={products}
+      numColumns={numColumns}
+      key={numColumns}
+      keyExtractor={(product) => product.id}
+      renderItem={({ item }) => (
+        <ProductItem
+          key={item.id}
+          product={item}
+          style={{ width: cardWidth }}
+        />
+      )}
+    />
+  );
+}
