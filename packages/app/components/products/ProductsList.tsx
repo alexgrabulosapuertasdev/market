@@ -35,6 +35,7 @@ export default function ProductsList({ products }: Props) {
           key={item.id}
           product={item}
           style={{ width: cardWidth }}
+          testID="product-item"
         />
       )}
     />

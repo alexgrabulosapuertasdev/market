@@ -1,16 +1,15 @@
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View, ViewProps } from 'react-native';
 import { ProductResponse } from '../../models/interfaces/Product';
 import StyledText from '../ui/StyledText';
 import { THEME } from '../../theme';
 
-interface Props {
+interface Props extends ViewProps {
   product: ProductResponse;
-  style?: object;
 }
 
-export default function ProductItem({ product, style }: Props) {
+export default function ProductItem({ product, style, ...rest }: Props) {
   return (
-    <View style={{ ...styles.container, ...style }}>
+    <View style={[styles.container, style]} {...rest}>
       <Image
         source={{ uri: `data:image/jpeg;base64,${product.image.base64}` }}
         style={{ ...styles.image, width: '100%' }}
