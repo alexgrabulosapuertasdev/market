@@ -20,7 +20,7 @@ export class ProductListComponent {
     private readonly messageService: MessageService,
     private readonly productService: ProductService,
   ) {
-    this.fetchProducts()
+    this.fetchProducts();
   }
 
   private fetchProducts(): void {
