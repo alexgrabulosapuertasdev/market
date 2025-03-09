@@ -19,5 +19,6 @@ import { UserUpdate } from '../application/update/user.update';
     UserUpdate,
     { provide: UserRepository, useClass: UserTypeormRepository },
   ],
+  exports: [{ provide: UserRepository, useClass: UserTypeormRepository }],
 })
 export class UserModule {}

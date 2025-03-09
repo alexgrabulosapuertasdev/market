@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { ProductTypeorm } from './entity/product-typeorm.entity';
 import { Product } from '../../domain/aggregates/product';
 import { ProductRepository } from '../../domain/ports/product.repository';
@@ -24,6 +24,28 @@ export class ProductTypeormRepository implements ProductRepository {
         filter: filter ? `%${filter}%` : '%',
       })
       .getMany();
+
+    return Promise.all(
+      products.map(async (product) => {
+        const productImage = await this.productImageModel.findOne({
+          productId: product.id,
+        });
+        const productResponse = {
+          ...product,
+          image: productImage,
+        };
+
+        return Product.create(productResponse);
+      }),
+    );
+  }
+
+  async findAllByIds(ids: string[]): Promise<Product[]> {
+    const products = await this.productRepository.find({
+      where: {
+        id: In(ids),
+      },
+    });
 
     return Promise.all(
       products.map(async (product) => {

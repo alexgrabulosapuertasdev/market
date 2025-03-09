@@ -29,5 +29,6 @@ import {
     ProductFindAll,
     { provide: ProductRepository, useClass: ProductTypeormRepository },
   ],
+  exports: [{ provide: ProductRepository, useClass: ProductTypeormRepository }],
 })
 export class ProductModule {}

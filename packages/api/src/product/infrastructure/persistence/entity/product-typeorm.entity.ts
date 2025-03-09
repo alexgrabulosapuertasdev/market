@@ -4,9 +4,11 @@ import {
   CreateDateColumn,
   Entity,
   Index,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { SaleProductTypeorm } from '../../../../sale-product/infrastructure/persistence/entity/sale-product-typeorm.entity';
 
 @Entity({ name: 'product' })
 @Index('INDEX_PRODUCT_NAME_CATEGORY', ['name', 'category'])
@@ -31,6 +33,9 @@ export class ProductTypeorm {
 
   @Column()
   stock: number;
+
+  @OneToMany(() => SaleProductTypeorm, (saleProduct) => saleProduct.product)
+  saleProducts: SaleProductTypeorm[];
 
   @CreateDateColumn()
   createdAt: Date;
