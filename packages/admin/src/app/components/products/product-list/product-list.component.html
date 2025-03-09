@@ -1,0 +1,27 @@
+<p-card>
+  <p-table [value]="products" [paginator]="true" [rows]="25" [rowsPerPageOptions]="[25, 50, 100]">
+    <ng-template pTemplate="caption">
+      <header class="flex justify-content-between align-items-center">
+        <h2 class="text-primary">Listado de productos</h2>
+      </header>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="name">Nombre <p-sortIcon field="name"></p-sortIcon></th>
+        <th pSortableColumn="category">Categoría <p-sortIcon field="category"></p-sortIcon></th>
+        <th pSortableColumn="price">Precio <p-sortIcon field="price"></p-sortIcon></th>
+        <th pSortableColumn="stock">Cantidad <p-sortIcon field="stock"></p-sortIcon></th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-product>
+      <tr>
+        <td>{{ product.name }}</td>
+        <td>{{ product.category }}</td>
+        <td>{{ product.price }} €</td>
+        <td>{{ product.stock }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>
