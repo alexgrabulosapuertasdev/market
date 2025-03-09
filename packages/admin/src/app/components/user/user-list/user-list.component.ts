@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { UserService } from "../../../services/user.service";
 import { UserResponse } from "../../../shared/interfaces/user/user-response.interface";
 import { ConfirmationService, MessageService } from "primeng/api";
@@ -16,7 +16,7 @@ import { CommonModule } from "@angular/common";
   providers: [ConfirmationService, MessageService],
   imports: [ButtonModule, CardModule, CommonModule, ConfirmDialogModule, TableModule, UserFormComponent],
 })
-export class UserListComponent implements OnInit {
+export class UserListComponent {
   users: UserResponse[] = [];
   modalUserFormIsOpened = false;
 
@@ -24,13 +24,11 @@ export class UserListComponent implements OnInit {
     private readonly confirmationService: ConfirmationService,
     private readonly messageService: MessageService,
     private readonly userService: UserService,
-  ) {}
-
-  ngOnInit(): void {
+  ) {
     this.fetchUsers();
   }
 
-  fetchUsers(): void {
+  private fetchUsers(): void {
     this.userService.findAll().subscribe({
       next: (users) => {
         this.users = users;
