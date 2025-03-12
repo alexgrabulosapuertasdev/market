@@ -14,3 +14,12 @@ export interface ProductResponse {
     base64: string;
   };
 }
+
+export interface ProductCreateDTO {
+  name: string;
+  description: string;
+  category: string;
+  price: number;
+  stock: number;
+  image: File;
+}
