@@ -6,7 +6,7 @@ export class NumberValueObject {
   }
 
   private ensureIsValid(value: number): void {
-    if (!value) {
+    if (value === undefined || value === null) {
       throw new InvalidArgument(`<${this.constructor.name}> is required`);
     }
   }
