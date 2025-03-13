@@ -11,6 +11,7 @@ import {
   ProductImageMongoose,
   ProductImageSchema,
 } from './persistence/entity/product-image-mongoose.model';
+import { ProductFindOneById } from '../application/find-one-by-id/product.find-one-by-id';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import {
   providers: [
     ProductCreate,
     ProductFindAll,
+    ProductFindOneById,
     { provide: ProductRepository, useClass: ProductTypeormRepository },
   ],
   exports: [{ provide: ProductRepository, useClass: ProductTypeormRepository }],

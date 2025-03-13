@@ -159,6 +159,23 @@ describe('ProductController (e2e)', () => {
     });
   });
 
+  describe('GET /:id', () => {
+    it('should return a product by id', async () => {
+      const { image, ...product } = ProductMother.create().toPrimitives();
+
+      await productRepository.save(product);
+
+      await productImageModel.insertOne(image);
+
+      const { body, status } = await request(app.getHttpServer()).get(
+        `/product/${product.id}`,
+      );
+
+      expect(status).toBe(HttpStatus.OK);
+      expect(body).toEqual({ ...product, image });
+    });
+  });
+
   describe('POST /', () => {
     it('should create a product', async () => {
       const { name, description, category, price, stock } =

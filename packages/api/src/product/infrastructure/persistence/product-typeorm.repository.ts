@@ -62,6 +62,19 @@ export class ProductTypeormRepository implements ProductRepository {
     );
   }
 
+  async findOneById(productId: string): Promise<Product> {
+    const product = await this.productRepository.findOne({
+      where: { id: productId },
+    });
+
+    const productImage = await this.productImageModel.findOne({ productId });
+
+    return Product.create({
+      ...product,
+      image: productImage,
+    });
+  }
+
   async save(product: Product): Promise<Product> {
     const {
       image: { originalname, mimetype, size, base64 },
