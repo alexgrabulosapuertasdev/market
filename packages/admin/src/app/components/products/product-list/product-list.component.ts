@@ -27,7 +27,7 @@ export class ProductListComponent {
     category: new FormControl<string | undefined>('', [Validators.required]),
     price: new FormControl<number | undefined>(undefined, [Validators.required]),
     stock: new FormControl<number | undefined>(undefined),
-    image: new FormControl<File | undefined>(undefined),
+    image: new FormControl<File | undefined>(undefined, [Validators.required]),
   });
   fieldsetList: FieldSetItem[] = [
     { name: 'name', label: 'Nombre', placeholder: 'Indica el nombre del producto', type: 'text', required: true },
