@@ -1,6 +1,8 @@
 <app-topbar (menuToggled)="toggleMenu()"></app-topbar>
 <main class="main">
-  <app-menu *ngIf="menuIsOpened"></app-menu>
+  @if (menuIsOpened) {
+    <app-menu></app-menu>
+  }
   <section>
     <router-outlet></router-outlet>
   </section>
