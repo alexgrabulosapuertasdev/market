@@ -163,7 +163,7 @@ describe('ProductController (e2e)', () => {
     it('should return a product by id', async () => {
       const { image, ...product } = ProductMother.create().toPrimitives();
 
-      await productRepository.save(product);
+      await productRepository.save({ ...product });
 
       await productImageModel.insertOne({
         ...image,
@@ -176,7 +176,7 @@ describe('ProductController (e2e)', () => {
 
       expect(status).toBe(HttpStatus.OK);
       expect({
-        ...body.product,
+        ...body,
         image: {
           originalname: body.image.originalname,
           mimetype: body.image.mimetype,
