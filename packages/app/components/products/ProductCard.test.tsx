@@ -9,7 +9,7 @@ describe('<ProductCard />', () => {
 
     const componente = render(ProductCard({ product }));
     const { getByText, getByTestId } = componente;
-    const image = getByTestId('product-image');
+    const image = getByTestId('product-card-image');
 
     expect(componente).toBeTruthy();
     expect(getByText(product.name)).toBeTruthy();
