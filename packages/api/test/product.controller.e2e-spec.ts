@@ -176,12 +176,12 @@ describe('ProductController (e2e)', () => {
 
       expect(status).toBe(HttpStatus.OK);
       expect({
-        ...product,
+        ...body.product,
         image: {
-          originalname: image.originalname,
-          mimetype: image.mimetype,
-          size: image.size,
-          base64: image.base64,
+          originalname: body.image.originalname,
+          mimetype: body.image.mimetype,
+          size: body.image.size,
+          base64: body.image.base64,
         },
       }).toEqual({
         ...product,
