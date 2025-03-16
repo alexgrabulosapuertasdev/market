@@ -175,7 +175,7 @@ describe('ProductController (e2e)', () => {
       );
 
       expect(status).toBe(HttpStatus.OK);
-      expect(body).toEqual({
+      expect({
         ...product,
         image: {
           originalname: image.originalname,
@@ -183,6 +183,9 @@ describe('ProductController (e2e)', () => {
           size: image.size,
           base64: image.base64,
         },
+      }).toEqual({
+        ...product,
+        image,
       });
     });
   });
