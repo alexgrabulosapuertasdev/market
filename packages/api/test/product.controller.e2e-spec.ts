@@ -165,7 +165,10 @@ describe('ProductController (e2e)', () => {
 
       await productRepository.save(product);
 
-      await productImageModel.insertOne(image);
+      await productImageModel.insertOne({
+        ...image,
+        productId: product.id,
+      });
 
       const { body, status } = await request(app.getHttpServer()).get(
         `/product/${product.id}`,
