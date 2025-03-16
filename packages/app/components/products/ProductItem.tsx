@@ -1,4 +1,12 @@
-import { Image, StyleSheet, View, ViewProps } from 'react-native';
+import {
+  Image,
+  Platform,
+  Pressable,
+  StyleSheet,
+  ViewProps,
+} from 'react-native';
+import { useNavigate as useNavigateWeb } from 'react-router-dom';
+import { useNavigate as useNavigateNative } from 'react-router-native';
 import { ProductResponse } from '../../models/interfaces/Product';
 import StyledText from '../ui/StyledText';
 import { THEME } from '../../theme';
@@ -8,8 +16,15 @@ interface Props extends ViewProps {
 }
 
 export default function ProductItem({ product, style, ...rest }: Props) {
+  const navigate =
+    Platform.OS === 'web' ? useNavigateWeb() : useNavigateNative();
+
+  const goToDetail = () => {
+    navigate(`/product/${product.id}`);
+  };
+
   return (
-    <View style={[styles.container, style]} {...rest}>
+    <Pressable onPress={goToDetail} style={[styles.container, style]} {...rest}>
       <Image
         source={{ uri: `data:image/jpeg;base64,${product.image.base64}` }}
         style={{ ...styles.image, width: '100%' }}
@@ -20,7 +35,7 @@ export default function ProductItem({ product, style, ...rest }: Props) {
       <StyledText>{product.description}</StyledText>
 
       <StyledText format="small">{product.price} €</StyledText>
-    </View>
+    </Pressable>
   );
 }
 
@@ -30,7 +45,7 @@ const styles = StyleSheet.create({
     backgroundColor: THEME.colors.backgroundSecundary,
     borderRadius: THEME.borderRadius.medium,
     borderColor: THEME.colors.details,
-    borderWidth: 1,
+    borderWidth: THEME.borderWidth,
     gap: THEME.gap.small,
   },
   image: {

@@ -17,6 +17,7 @@ export const THEME = {
     medium: 16,
     large: 24,
   },
+  borderWidth: 1,
   padding: {
     item: 16,
     container: 24,
