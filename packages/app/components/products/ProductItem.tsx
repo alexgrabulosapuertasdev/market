@@ -1,26 +1,24 @@
-import {
-  Image,
-  Platform,
-  Pressable,
-  StyleSheet,
-  ViewProps,
-} from 'react-native';
-import { useNavigate as useNavigateWeb } from 'react-router-dom';
-import { useNavigate as useNavigateNative } from 'react-router-native';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { Image, Pressable, StyleSheet, ViewProps } from 'react-native';
 import { ProductResponse } from '../../models/interfaces/Product';
 import StyledText from '../ui/StyledText';
 import { THEME } from '../../theme';
+
+type RootStackParamList = {
+  ProductDetail: { id: string };
+};
 
 interface Props extends ViewProps {
   product: ProductResponse;
 }
 
 export default function ProductItem({ product, style, ...rest }: Props) {
-  const navigate =
-    Platform.OS === 'web' ? useNavigateWeb() : useNavigateNative();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const goToDetail = () => {
-    navigate(`/product/${product.id}`);
+    navigation.navigate('ProductDetail', { id: product.id });
   };
 
   return (

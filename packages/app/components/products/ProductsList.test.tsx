@@ -1,8 +1,8 @@
+import { NavigationContainer } from '@react-navigation/native';
 import { render } from '@testing-library/react-native';
 import ProductsList from './ProductsList';
 import { ProductResponse } from '../../models/interfaces/Product';
 import { ProductMother } from '../../models/mothers/ProductMother';
-import { MemoryRouter } from 'react-router-dom';
 
 describe('<ProductsList />', () => {
   it('renders correctly with given product data', () => {
@@ -12,9 +12,9 @@ describe('<ProductsList />', () => {
     ];
 
     const component = render(
-      <MemoryRouter>
+      <NavigationContainer>
         <ProductsList products={products} />
-      </MemoryRouter>,
+      </NavigationContainer>,
     );
     const { getAllByTestId } = component;
 

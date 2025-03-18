@@ -1,9 +1,10 @@
+import { RouteProp, useRoute } from '@react-navigation/native';
 import { useProduct } from '../../hooks/useProduct';
 import ProductCard from '../../components/products/ProductCard';
-import { useParams } from 'react-router-dom';
 
 export default function Product() {
-  const { id } = useParams();
+  const route = useRoute<RouteProp<{ params: { id: string } }>>();
+  const { id } = route.params;
   const { product } = useProduct(id);
 
   return <>{product && <ProductCard product={product} />}</>;
