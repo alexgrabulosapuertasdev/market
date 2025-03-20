@@ -23,9 +23,9 @@ export default function App() {
   return (
     <CartProvider>
       <View style={styles.container}>
-        <Header />
-        <CartList />
         <NavigationContainer linking={linking}>
+          <Header />
+          <CartList />
           <Stack.Navigator id={undefined} initialRouteName="Products">
             <Stack.Screen
               name="Products"
