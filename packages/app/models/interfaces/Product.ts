@@ -12,3 +12,7 @@ export interface ProductResponse {
     base64: string;
   };
 }
+
+export interface ProductCart extends ProductResponse {
+  quantity: number;
+}

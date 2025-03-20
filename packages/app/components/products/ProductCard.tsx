@@ -2,12 +2,16 @@ import { Image, StyleSheet, View } from 'react-native';
 import { ProductResponse } from '../../models/interfaces/Product';
 import StyledText from '../ui/StyledText';
 import { THEME } from '../../theme';
+import StyledButton from '../ui/StyledButton';
+import { useCartContext } from '../../contexts/CartContext';
 
 interface Props {
   product: ProductResponse;
 }
 
 export default function ProductCard({ product }: Props) {
+  const { addProduct } = useCartContext();
+
   return (
     <View style={styles.container}>
       <Image
@@ -20,6 +24,12 @@ export default function ProductCard({ product }: Props) {
         <StyledText format="subtitle">{product.name}</StyledText>
         <StyledText>{product.description}</StyledText>
         <StyledText format="small">{product.price} €</StyledText>
+        <StyledButton
+          text="Añadir al carrito"
+          onPress={() => {
+            addProduct(product);
+          }}
+        />
       </View>
     </View>
   );

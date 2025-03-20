@@ -1,6 +1,8 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StyleSheet, View } from 'react-native';
+import { CartProvider } from './contexts/CartContext';
+import CartList from './components/cart/CartList';
 import Header from './components/partials/Header';
 import ProductDetailScreen from './pages/products/ProductDetailScreen';
 import Products from './pages/products/Products';
@@ -19,23 +21,26 @@ const linking = {
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Header />
-      <NavigationContainer linking={linking}>
-        <Stack.Navigator id={undefined} initialRouteName="Products">
-          <Stack.Screen
-            name="Products"
-            component={Products}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="ProductDetail"
-            component={ProductDetailScreen}
-            options={{ headerShown: false }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </View>
+    <CartProvider>
+      <View style={styles.container}>
+        <Header />
+        <CartList />
+        <NavigationContainer linking={linking}>
+          <Stack.Navigator id={undefined} initialRouteName="Products">
+            <Stack.Screen
+              name="Products"
+              component={Products}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="ProductDetail"
+              component={ProductDetailScreen}
+              options={{ headerShown: false }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </View>
+    </CartProvider>
   );
 }
 

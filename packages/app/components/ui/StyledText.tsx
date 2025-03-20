@@ -3,7 +3,7 @@ import { THEME } from '../../theme';
 
 interface Props {
   children: any;
-  format?: 'title' | 'subtitle' | 'text' | 'small';
+  format?: 'title' | 'subtitle' | 'text' | 'small' | 'button';
   style?: object;
 }
 
@@ -31,5 +31,11 @@ const styles = StyleSheet.create({
     fontSize: THEME.fontSizes.small,
     fontWeight: 'bold',
     color: THEME.colors.primary,
+  },
+  button: {
+    textAlign: 'center',
+    color: THEME.colors.white,
+    fontWeight: 'bold',
+    fontSize: THEME.fontSizes.button,
   },
 });

@@ -6,10 +6,13 @@ export const THEME = {
     textPrimary: '#333333',
     textSecundary: '#666666',
     details: '#CCCCCC',
+    white: '#EEEEEE',
+    red: '#AE0000',
   },
   fontSizes: {
     small: 16,
     text: 18,
+    button: 19,
     subtitle: 20,
     title: 24,
   },
