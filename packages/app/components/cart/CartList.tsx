@@ -1,4 +1,5 @@
 import { FlatList, Image, StyleSheet, View } from 'react-native';
+import Quantity from '../common/Quantity';
 import StyledText from '../ui/StyledText';
 import { THEME } from '../../theme';
 import { useCartContext } from '../../contexts/CartContext';
@@ -36,21 +37,11 @@ export default function CartList() {
                   format="danger"
                 ></StyledButton>
               </View>
-              <View style={styles.quantity}>
-                <StyledButton
-                  icon="minus"
-                  onPress={() => decreaseProduct(item.id)}
-                  iconSize="small"
-                  format="transparent"
-                ></StyledButton>
-                <StyledText format="small">{item.quantity}</StyledText>
-                <StyledButton
-                  icon="plus"
-                  onPress={() => addProduct(item)}
-                  iconSize="small"
-                  format="transparent"
-                ></StyledButton>
-              </View>
+              <Quantity
+                add={() => addProduct(item)}
+                decrease={() => decreaseProduct(item.id)}
+                quantity={item.quantity}
+              />
             </View>
           )}
         />
@@ -86,14 +77,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-  },
-  quantity: {
-    alignItems: 'center',
-    borderColor: THEME.colors.details,
-    borderRadius: THEME.borderRadius.large,
-    borderWidth: THEME.borderWidth,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    height: 30,
   },
 });
