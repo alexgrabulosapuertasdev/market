@@ -29,6 +29,16 @@ export class UserTypeormRepository implements UserRepository {
     return User.create(user);
   }
 
+  async findOneByName(name: string): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { name } });
+
+    if (!user) {
+      throw new NotFound('There are no users with this name');
+    }
+
+    return User.create(user);
+  }
+
   async save(user: User): Promise<User> {
     const userResponse = await this.userRepository.save(user.toPrimitives());
 

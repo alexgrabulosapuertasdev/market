@@ -4,6 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import * as request from 'supertest';
 import { Repository } from 'typeorm';
+import { AuthSignIn } from '../src/auth/application/sign-in/auth.sign-in';
 import { UserMother } from '../src/user/domain/mothers/user.mother';
 import { MariadbConfig } from '../src/shared/infrastructure/persistence/mariadb.config';
 import { UserTypeorm } from '../src/user/infrastructure/persistence/entity/user-typeorm.entity';
@@ -15,13 +16,19 @@ describe('UserController (e2e)', () => {
   let userRepository: Repository<UserTypeorm>;
 
   beforeAll(async () => {
+    const authSignInMock = {
+      run: jest.fn().mockResolvedValue({ token: 'token' }),
+    };
     testingModule = await Test.createTestingModule({
       imports: [
         ConfigModule.forRoot({ envFilePath: '.env.test' }),
         MariadbConfig.createConnection(),
         UserModule,
       ],
-    }).compile();
+    })
+      .overrideProvider(AuthSignIn)
+      .useValue(authSignInMock)
+      .compile();
 
     userRepository = testingModule.get<Repository<UserTypeorm>>(
       getRepositoryToken(UserTypeorm),

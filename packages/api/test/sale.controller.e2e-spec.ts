@@ -4,6 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import * as request from 'supertest';
 import { Repository } from 'typeorm';
+import { AuthSignIn } from '../src/auth/application/sign-in/auth.sign-in';
 import { SaleTypeorm } from '../src/sale/infrastructure/persistence/entity/sale-typeorm.entity';
 import { SaleModule } from '../src/sale/infrastructure/sale.module';
 import { MariadbConfig } from '../src/shared/infrastructure/persistence/mariadb.config';
@@ -23,6 +24,9 @@ describe('SaleController (e2e)', () => {
   let productRepository: Repository<ProductTypeorm>;
 
   beforeAll(async () => {
+    const authSignInMock = {
+      run: jest.fn().mockResolvedValue({ token: 'token' }),
+    };
     testingModule = await Test.createTestingModule({
       imports: [
         ConfigModule.forRoot({ envFilePath: '.env.test' }),
@@ -30,7 +34,10 @@ describe('SaleController (e2e)', () => {
         MongoImageConfig.createConnection(),
         SaleModule,
       ],
-    }).compile();
+    })
+      .overrideProvider(AuthSignIn)
+      .useValue(authSignInMock)
+      .compile();
 
     saleRepository = testingModule.get<Repository<SaleTypeorm>>(
       getRepositoryToken(SaleTypeorm),

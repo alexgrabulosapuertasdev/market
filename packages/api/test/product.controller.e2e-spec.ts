@@ -6,6 +6,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import * as request from 'supertest';
 import { Repository } from 'typeorm';
+import { AuthSignIn } from '../src/auth/application/sign-in/auth.sign-in';
 import { ProductMother } from '../src/product/domain/mothers/product.mother';
 import { ProductNameMother } from '../src/product/domain/mothers/product-name.mother';
 import { ProductTypeorm } from '../src/product/infrastructure/persistence/entity/product-typeorm.entity';
@@ -22,6 +23,9 @@ describe('ProductController (e2e)', () => {
   let productImageModel: Model<ProductImageMongoose>;
 
   beforeAll(async () => {
+    const authSignInMock = {
+      run: jest.fn().mockResolvedValue({ token: 'token' }),
+    };
     testingModule = await Test.createTestingModule({
       imports: [
         ConfigModule.forRoot({ envFilePath: '.env.test' }),
@@ -29,7 +33,10 @@ describe('ProductController (e2e)', () => {
         MongoImageConfig.createConnection(),
         ProductModule,
       ],
-    }).compile();
+    })
+      .overrideProvider(AuthSignIn)
+      .useValue(authSignInMock)
+      .compile();
 
     productRepository = testingModule.get<Repository<ProductTypeorm>>(
       getRepositoryToken(ProductTypeorm),

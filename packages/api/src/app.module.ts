@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MariadbConfig } from './shared/infrastructure/persistence/mariadb.config';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/infrastructure/auth.module';
 import { ProductModule } from './product/infrastructure/product.module';
 import { SaleModule } from './sale/infrastructure/sale.module';
 import { UserModule } from './user/infrastructure/user.module';
@@ -9,6 +10,7 @@ import { MongoImageConfig } from './shared/infrastructure/persistence/mongo-imag
 @Module({
   imports: [
     ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
+    AuthModule,
     MariadbConfig.createConnection(),
     MongoImageConfig.createConnection(),
     ProductModule,

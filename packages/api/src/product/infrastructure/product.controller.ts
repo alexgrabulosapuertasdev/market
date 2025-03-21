@@ -15,6 +15,7 @@ import { ProductResponse } from '../domain/interface/product.response';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ProductFindAll } from '../application/find-all/product.find-all';
 import { ProductFindOneById } from '../application/find-one-by-id/product.find-one-by-id';
+import { Public } from '../../auth/infrastructure/decorators/public.decorator';
 
 @Controller('product')
 export class ProductController {
@@ -24,11 +25,13 @@ export class ProductController {
     private readonly productFindOneById: ProductFindOneById,
   ) {}
 
+  @Public()
   @Get()
   findAll(@Query('filter') filter?: string): Promise<ProductResponse[]> {
     return this.productFindAll.run(filter);
   }
 
+  @Public()
   @Get(':id')
   findOneById(@Param('id') id: string): Promise<ProductResponse> {
     return this.productFindOneById.run(id);
