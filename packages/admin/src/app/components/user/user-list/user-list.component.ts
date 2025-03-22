@@ -13,7 +13,6 @@ import { CommonModule } from "@angular/common";
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
   standalone: true,
-  providers: [ConfirmationService, MessageService],
   imports: [ButtonModule, CardModule, CommonModule, ConfirmDialogModule, TableModule, UserFormComponent],
 })
 export class UserListComponent {

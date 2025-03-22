@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { MessageService } from 'primeng/api';
 import { of } from 'rxjs';
 import { ProductListComponent } from "./product-list.component";
 import { ProductService } from '../../../services/product.service';
@@ -48,6 +49,7 @@ describe('ProductListComponent', () => {
       imports: [ProductListComponent],
       providers: [
         { provide: ProductService, useValue: productServiceSpy },
+        MessageService,
       ],
     });
 

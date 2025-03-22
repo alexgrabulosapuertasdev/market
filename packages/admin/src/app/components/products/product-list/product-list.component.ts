@@ -14,7 +14,6 @@ import { ToastModule } from "primeng/toast";
   selector: 'app-product-list',
   standalone: true,
   templateUrl: './product-list.component.html',
-  providers: [MessageService],
   imports: [ButtonModule, CardModule, FormComponent, TableModule, ToastModule],
 })
 export class ProductListComponent {

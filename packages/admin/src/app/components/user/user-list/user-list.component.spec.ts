@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { of } from 'rxjs';
 import { UserListComponent } from "./user-list.component";
 import { UserService } from '../../../services/user.service';
@@ -35,6 +36,8 @@ describe('UserListComponent', () => {
       imports: [UserListComponent],
       providers: [
         { provide: UserService, useValue: userServiceSpy },
+        ConfirmationService,
+        MessageService,
       ],
     });
 

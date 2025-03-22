@@ -1,0 +1,23 @@
+section {
+  padding: 24px;
+
+  form {
+    border: 1px solid gray;
+    border-radius: 8px;
+    padding: 24px;
+
+    fieldset {
+      border: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 0;
+      margin: 0 0 24px;
+    }
+
+    footer {
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+}

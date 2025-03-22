@@ -1,0 +1,29 @@
+<section>
+  <header>
+    <h2 class="text-primary">Iniciar sesión</h2>
+  </header>
+
+  <form [formGroup]="formGroup">
+    <fieldset>
+      <label for="email"><span class="text-red-500">*</span> Correo electrónico</label>
+      <input pInputText type="text" formControlName="email" id="email" placeholder="Introduzca su correo electrónico">
+      @if (isSubmitted && !formGroup.value.email) {
+        <small class="text-red-500">Este campo es obligatorio</small>
+      }
+    </fieldset>
+
+    <fieldset>
+      <label for="password"><span class="text-red-500">*</span> Contraseña</label>
+      <input pInputText type="password" formControlName="password" id="password" placeholder="Introduzca su contraseña">
+      @if (isSubmitted && !formGroup.value.password) {
+        <small class="text-red-500">Este campo es obligatorio</small>
+      }
+    </fieldset>
+
+    <footer>
+      <p-button (click)="login()" icon="pi pi-save" label="Iniciar sesion" styleClass="p-button-success" />
+    </footer>
+  </form>
+</section>
+
+<p-toast></p-toast>
