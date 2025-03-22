@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { ApiService } from "./api.service";
-import { API_URL } from "../shared/enum/api-url.enum";
-import { UserResponse } from "../shared/interfaces/user/user-response.interface";
-import { UserCreate } from "../shared/interfaces/user/user-create.interface";
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ApiService } from './api.service';
+import { API_URL } from '../shared/enum/api-url.enum';
+import { UserResponse } from '../shared/interfaces/user/user-response.interface';
+import { UserCreate } from '../shared/interfaces/user/user-create.interface';
 
 @Injectable({
   providedIn: 'root',

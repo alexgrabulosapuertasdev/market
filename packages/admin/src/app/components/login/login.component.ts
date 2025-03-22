@@ -1,10 +1,15 @@
-import { Component } from "@angular/core";
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { ButtonModule } from "primeng/button";
-import { InputTextModule } from "primeng/inputtext";
-import { ToastModule } from "primeng/toast";
-import { AuthService } from "../../services/auth.service";
-import { LoginCredentials } from "../../shared/interfaces/login/login-credentials.interface";
+import { Component } from '@angular/core';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { ToastModule } from 'primeng/toast';
+import { AuthService } from '../../services/auth.service';
+import { LoginCredentials } from '../../shared/interfaces/login/login-credentials.interface';
 
 @Component({
   selector: 'app-login',
@@ -20,9 +25,7 @@ export class LoginComponent {
   });
   isSubmitted = false;
 
-  constructor(
-    private readonly authService: AuthService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   login(): void {
     this.isSubmitted = true;
@@ -35,7 +38,7 @@ export class LoginComponent {
 
     const credentials: LoginCredentials = {
       email: email!,
-      password: password!
+      password: password!,
     };
 
     this.authService.login(credentials);

@@ -1,23 +1,40 @@
 <p-card>
-  <p-table [value]="users" [paginator]="true" [rows]="25" [rowsPerPageOptions]="[25, 50, 100]">
+  <p-table
+    [value]="users"
+    [paginator]="true"
+    [rows]="25"
+    [rowsPerPageOptions]="[25, 50, 100]"
+  >
     <ng-template pTemplate="caption">
       <header class="flex justify-content-between align-items-center">
         <h2 class="text-primary">Listado de usuarios</h2>
 
-        <p-button (click)="openModalAddUser()" icon="pi pi-plus" label="Añadir" />
+        <p-button
+          (click)="openModalAddUser()"
+          icon="pi pi-plus"
+          label="Añadir"
+        />
       </header>
     </ng-template>
 
     <ng-template pTemplate="header">
       <tr>
-        <th pSortableColumn="name">Nombre <p-sortIcon field="name"></p-sortIcon></th>
-        <th pSortableColumn="surnames">Apellidos <p-sortIcon field="surname"></p-sortIcon></th>
-        <th pSortableColumn="email">Correo electrónico <p-sortIcon field="email"></p-sortIcon></th>
-        <th pSortableColumn="role">Rol <p-sortIcon field="role"></p-sortIcon></th>
+        <th pSortableColumn="name">
+          Nombre <p-sortIcon field="name"></p-sortIcon>
+        </th>
+        <th pSortableColumn="surnames">
+          Apellidos <p-sortIcon field="surname"></p-sortIcon>
+        </th>
+        <th pSortableColumn="email">
+          Correo electrónico <p-sortIcon field="email"></p-sortIcon>
+        </th>
+        <th pSortableColumn="role">
+          Rol <p-sortIcon field="role"></p-sortIcon>
+        </th>
         <th [width]="1"></th>
       </tr>
     </ng-template>
-  
+
     <ng-template pTemplate="body" let-user>
       <tr>
         <td>{{ user.name }}</td>
@@ -25,13 +42,20 @@
         <td>{{ user.email }}</td>
         <td>{{ user.role }}</td>
         <td>
-          <p-button (click)="deleteUser(user)" icon="pi pi-trash" styleClass="text-red-500 p-button-danger bg-transparent border-none border-circle" />
+          <p-button
+            (click)="deleteUser(user)"
+            icon="pi pi-trash"
+            styleClass="text-red-500 p-button-danger bg-transparent border-none border-circle"
+          />
         </td>
       </tr>
     </ng-template>
   </p-table>
 </p-card>
 
-<p-confirmDialog></p-confirmDialog> 
+<p-confirmDialog></p-confirmDialog>
 
-<app-user-form [isVisible]="modalUserFormIsOpened" (closeModalEvent)="closeModalAddUser()"></app-user-form>
+<app-user-form
+  [isVisible]="modalUserFormIsOpened"
+  (closeModalEvent)="closeModalAddUser()"
+></app-user-form>

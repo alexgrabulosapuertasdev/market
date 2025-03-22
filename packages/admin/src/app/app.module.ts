@@ -13,11 +13,7 @@ import { MenuComponent } from './components/partials/menu/menu.component';
 import { LoginComponent } from './components/login/login.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    MenuComponent,
-    TopbarComponent,
-  ],
+  declarations: [AppComponent, MenuComponent, TopbarComponent],
   imports: [
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -31,6 +27,6 @@ import { LoginComponent } from './components/login/login.component';
     ConfirmationService,
     MessageService,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

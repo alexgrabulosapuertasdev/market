@@ -1,4 +1,8 @@
-<p-dialog [(visible)]="isVisible" [style]="{ width: '80vw', height: '80vh' }" (onHide)="closeModal()">
+<p-dialog
+  [(visible)]="isVisible"
+  [style]="{ width: '80vw', height: '80vh' }"
+  (onHide)="closeModal()"
+>
   <ng-template pTemplate="header">
     <h2 class="text-primary">{{ title }}</h2>
   </ng-template>
@@ -6,47 +10,90 @@
   <ng-template pTemplate="body">
     <form [formGroup]="formGroup" (submit)="onSubmit()" class="grid">
       @for (fieldsetItem of fieldsetList; track $index) {
-        <fieldset [ngClass]="{ 'col-12' : fieldsetItem.size === 'big' }" class="col-6">
-          <label [for]="fieldsetItem.name"><span class="text-red-500">{{ fieldsetItem.required ? '*' : '' }}</span> {{ fieldsetItem.label }}</label>
-            @switch (fieldsetItem.type) {
-              @case ('textarea') {
-                <textarea pInputText [formControlName]="fieldsetItem.name" [id]="fieldsetItem.name" [placeholder]="fieldsetItem.placeholder"></textarea>
-              }
-              @case ('select') {
-                <select pInputText [formControlName]="fieldsetItem.name" [id]="fieldsetItem.name" aria-placeholder="Ind">
-                  <option value="" hidden>{{ fieldsetItem.placeholder }}</option>
-                  @for (option of fieldsetItem.selectOptions; track $index) {
-                    <option [value]="option.value">{{ option.description }}</option>
-                  }
-                </select>
-              }
-              @case ('file') {
-                <div>
-                  <input type="file" [id]="fieldsetItem.name" (change)="onFileSelected($event, fieldsetItem.name)" hidden accept="image/*">
+      <fieldset
+        [ngClass]="{ 'col-12': fieldsetItem.size === 'big' }"
+        class="col-6"
+      >
+        <label [for]="fieldsetItem.name"
+          ><span class="text-red-500">{{
+            fieldsetItem.required ? '*' : ''
+          }}</span>
+          {{ fieldsetItem.label }}</label
+        >
+        @switch (fieldsetItem.type) { @case ('textarea') {
+        <textarea
+          pInputText
+          [formControlName]="fieldsetItem.name"
+          [id]="fieldsetItem.name"
+          [placeholder]="fieldsetItem.placeholder"
+        ></textarea>
+        } @case ('select') {
+        <select
+          pInputText
+          [formControlName]="fieldsetItem.name"
+          [id]="fieldsetItem.name"
+          aria-placeholder="Ind"
+        >
+          <option value="" hidden>{{ fieldsetItem.placeholder }}</option>
+          @for (option of fieldsetItem.selectOptions; track $index) {
+          <option [value]="option.value">{{ option.description }}</option>
+          }
+        </select>
+        } @case ('file') {
+        <div>
+          <input
+            type="file"
+            [id]="fieldsetItem.name"
+            (change)="onFileSelected($event, fieldsetItem.name)"
+            hidden
+            accept="image/*"
+          />
 
-                  <p-button type="button" (click)="triggerFileInput(fieldsetItem.name)" class="p-button-primary">
-                    Subir imagen
-                  </p-button>
+          <p-button
+            type="button"
+            (click)="triggerFileInput(fieldsetItem.name)"
+            class="p-button-primary"
+          >
+            Subir imagen
+          </p-button>
 
-                  @if (imagePreview) {
-                    <img [src]="imagePreview" alt="Vista previa" class="object-cover rounded-lg shadow mt-2">
-                  }
-                </div>
-              }
-              @default {
-                <input pInputText [formControlName]="fieldsetItem.name" [id]="fieldsetItem.name" [type]="fieldsetItem.type" [placeholder]="fieldsetItem.placeholder">
-              }
-            }
-            @if (fieldsetItem.required && isSubmitted && !formGroup.value[fieldsetItem.name]) {
-              <small class="text-red-500">Este campo es obligatorio</small>
-            }          
-        </fieldset>
+          @if (imagePreview) {
+          <img
+            [src]="imagePreview"
+            alt="Vista previa"
+            class="object-cover rounded-lg shadow mt-2"
+          />
+          }
+        </div>
+        } @default {
+        <input
+          pInputText
+          [formControlName]="fieldsetItem.name"
+          [id]="fieldsetItem.name"
+          [type]="fieldsetItem.type"
+          [placeholder]="fieldsetItem.placeholder"
+        />
+        } } @if (fieldsetItem.required && isSubmitted &&
+        !formGroup.value[fieldsetItem.name]) {
+        <small class="text-red-500">Este campo es obligatorio</small>
+        }
+      </fieldset>
       }
     </form>
   </ng-template>
 
   <ng-template pTemplate="footer">
-    <p-button (click)="closeModal()" label="Cancelar" styleClass="p-button-danger" type="button" />
-    <p-button (click)="onSubmit()" icon="pi pi-save" label="Añadir" styleClass="p-button-success" />
+    <p-button
+      (click)="closeModal()"
+      label="Cancelar"
+      styleClass="p-button-danger"
+      type="button"
+    />
+    <p-button
+      (click)="onSubmit()"
+      icon="pi pi-save"
+      label="Añadir"
+      styleClass="p-button-success"
+    />
   </ng-template>
 </p-dialog>

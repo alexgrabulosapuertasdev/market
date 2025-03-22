@@ -1,17 +1,16 @@
-import { Injectable } from "@angular/core";
-import { MessageService } from "primeng/api";
-import { ApiService } from "./api.service";
-import { API_URL } from "../shared/enum/api-url.enum";
-import { LoginCredentials } from "../shared/interfaces/login/login-credentials.interface";
-import { LoginResponse } from "../shared/interfaces/login/login-response.interface";
-import { HttpClient } from "@angular/common/http";
-import { Router } from "@angular/router";
+import { Injectable } from '@angular/core';
+import { MessageService } from 'primeng/api';
+import { ApiService } from './api.service';
+import { API_URL } from '../shared/enum/api-url.enum';
+import { LoginCredentials } from '../shared/interfaces/login/login-credentials.interface';
+import { LoginResponse } from '../shared/interfaces/login/login-response.interface';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService extends ApiService {
-
   constructor(
     protected override httpClient: HttpClient,
     private readonly messageService: MessageService,

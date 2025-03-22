@@ -1,13 +1,13 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MessageService } from 'primeng/api';
 import { of } from 'rxjs';
-import { ProductListComponent } from "./product-list.component";
+import { ProductListComponent } from './product-list.component';
 import { ProductService } from '../../../services/product.service';
 import { PRODUCT_CATEGORY } from '../../../shared/enum/product-category.enum';
 import { ProductResponse } from '../../../shared/interfaces/product/product-response.interface';
 
 describe('ProductListComponent', () => {
-  let component: ProductListComponent; 
+  let component: ProductListComponent;
   let fixture: ComponentFixture<ProductListComponent>;
   let productServiceSpy: jasmine.SpyObj<ProductService>;
   const mockProducts: ProductResponse[] = [
@@ -23,7 +23,7 @@ describe('ProductListComponent', () => {
         mimetype: crypto.randomUUID(),
         size: 20,
         base64: crypto.randomUUID(),
-      }
+      },
     },
     {
       id: crypto.randomUUID(),
@@ -37,7 +37,7 @@ describe('ProductListComponent', () => {
         mimetype: crypto.randomUUID(),
         size: 20,
         base64: crypto.randomUUID(),
-      }
+      },
     },
   ];
   beforeEach(waitForAsync(() => {

@@ -1,10 +1,10 @@
-import { CommonModule } from "@angular/common";
-import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { ButtonModule } from "primeng/button";
-import { DialogModule } from "primeng/dialog";
-import { InputTextModule } from "primeng/inputtext";
-import { ToastModule } from "primeng/toast";
+import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { ToastModule } from 'primeng/toast';
 
 export interface FieldSetItem<T = string> {
   name: string;
@@ -54,7 +54,7 @@ export class FormComponent {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = () => this.imagePreview = reader.result as string;
+      reader.onload = () => (this.imagePreview = reader.result as string);
       reader.readAsDataURL(file);
       this.formGroup.patchValue({ image: file });
       this.formGroup.get(name)?.updateValueAndValidity();

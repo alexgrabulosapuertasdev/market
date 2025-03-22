@@ -1,13 +1,13 @@
 @if (authService.getToken()) {
-  <app-topbar (menuToggled)="toggleMenu()"></app-topbar>
-  <main class="main">
-    @if (menuIsOpened) {
-      <app-menu></app-menu>
-    }
-    <section>
-      <router-outlet></router-outlet>
-    </section>
-  </main>
+<app-topbar (menuToggled)="toggleMenu()"></app-topbar>
+<main class="main">
+  @if (menuIsOpened) {
+  <app-menu></app-menu>
+  }
+  <section>
+    <router-outlet></router-outlet>
+  </section>
+</main>
 } @else {
-  <app-login />
+<app-login />
 }

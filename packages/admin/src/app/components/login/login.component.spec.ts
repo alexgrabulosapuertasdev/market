@@ -13,7 +13,10 @@ describe('LoginComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [LoginComponent],
-      providers: [{ provide: AuthService, useValue: authServiceSpy }, MessageService],
+      providers: [
+        { provide: AuthService, useValue: authServiceSpy },
+        MessageService,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(LoginComponent);
@@ -41,13 +44,16 @@ describe('LoginComponent', () => {
   });
 
   it('you should call AuthService.login with valid credentials', () => {
-    component.formGroup.setValue({ email: 'test@example.com', password: '123456' });
+    component.formGroup.setValue({
+      email: 'test@example.com',
+      password: '123456',
+    });
 
     component.login();
 
     expect(authServiceSpy.login).toHaveBeenCalledWith({
       email: 'test@example.com',
-      password: '123456'
+      password: '123456',
     });
   });
 });

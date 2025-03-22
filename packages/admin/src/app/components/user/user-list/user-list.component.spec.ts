@@ -1,13 +1,13 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { of } from 'rxjs';
-import { UserListComponent } from "./user-list.component";
+import { UserListComponent } from './user-list.component';
 import { UserService } from '../../../services/user.service';
 import { USER_ROLE } from '../../../shared/enum/user-role.enum';
 import { UserResponse } from '../../../shared/interfaces/user/user-response.interface';
 
 describe('UserListComponent', () => {
-  let component: UserListComponent; 
+  let component: UserListComponent;
   let fixture: ComponentFixture<UserListComponent>;
   let userServiceSpy: jasmine.SpyObj<UserService>;
   const mockUsers: UserResponse[] = [

@@ -1,19 +1,26 @@
-import { Component } from "@angular/core";
-import { UserService } from "../../../services/user.service";
-import { UserResponse } from "../../../shared/interfaces/user/user-response.interface";
-import { ConfirmationService, MessageService } from "primeng/api";
-import { TableModule } from "primeng/table";
-import { CardModule } from "primeng/card";
-import { ConfirmDialogModule } from 'primeng/confirmdialog'
-import { ButtonModule } from "primeng/button";
-import { UserFormComponent } from "../user-form/user-form.component";
-import { CommonModule } from "@angular/common";
+import { Component } from '@angular/core';
+import { UserService } from '../../../services/user.service';
+import { UserResponse } from '../../../shared/interfaces/user/user-response.interface';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { TableModule } from 'primeng/table';
+import { CardModule } from 'primeng/card';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ButtonModule } from 'primeng/button';
+import { UserFormComponent } from '../user-form/user-form.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
   standalone: true,
-  imports: [ButtonModule, CardModule, CommonModule, ConfirmDialogModule, TableModule, UserFormComponent],
+  imports: [
+    ButtonModule,
+    CardModule,
+    CommonModule,
+    ConfirmDialogModule,
+    TableModule,
+    UserFormComponent,
+  ],
 })
 export class UserListComponent {
   users: UserResponse[] = [];
@@ -42,7 +49,7 @@ export class UserListComponent {
     });
   }
 
-  deleteUser({ id, name }: { id: string, name: string }): void {
+  deleteUser({ id, name }: { id: string; name: string }): void {
     this.confirmationService.confirm({
       accept: () => {
         this.userService.delete(id).subscribe({
@@ -60,7 +67,7 @@ export class UserListComponent {
               summary: 'Eliminar usuario',
               detail: `Error al eliminar al usuario "${name}"`,
             });
-          }
+          },
         });
       },
       header: `Eliminar al usuario ${name}`,

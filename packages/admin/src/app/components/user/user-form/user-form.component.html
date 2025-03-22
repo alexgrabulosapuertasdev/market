@@ -1,4 +1,8 @@
-<p-dialog [(visible)]="isVisible" [style]="{ width: '80vw', height: '80vh' }" (onHide)="closeModal()">
+<p-dialog
+  [(visible)]="isVisible"
+  [style]="{ width: '80vw', height: '80vh' }"
+  (onHide)="closeModal()"
+>
   <ng-template pTemplate="header">
     <h2 class="text-primary">Añade un usuario</h2>
   </ng-template>
@@ -7,45 +11,79 @@
     <form [formGroup]="formGroup" (submit)="submit()">
       <fieldset>
         <label for="name">Nombre</label>
-        <input pInputText formControlName="name" id="name" type="text" required>
+        <input
+          pInputText
+          formControlName="name"
+          id="name"
+          type="text"
+          required
+        />
         @if (isSubmitted && !formGroup.value['name']) {
-          <small class="text-red-500">Este campo es obligatorio</small>
+        <small class="text-red-500">Este campo es obligatorio</small>
         }
       </fieldset>
-  
+
       <fieldset>
         <label for="surnames">Apellidos</label>
-        <input pInputText formControlName="surnames" id="surnames" type="text" required>
+        <input
+          pInputText
+          formControlName="surnames"
+          id="surnames"
+          type="text"
+          required
+        />
         @if (isSubmitted && !formGroup.value['surnames']) {
-          <small class="text-red-500">Este campo es obligatorio</small>
+        <small class="text-red-500">Este campo es obligatorio</small>
         }
       </fieldset>
-  
+
       <fieldset>
         <label for="email">Correo electrónico</label>
-        <input pInputText formControlName="email" id="email" type="email" required>
+        <input
+          pInputText
+          formControlName="email"
+          id="email"
+          type="email"
+          required
+        />
         @if (isSubmitted && !formGroup.value['email']) {
-          <small class="text-red-500">Este campo es obligatorio</small>
+        <small class="text-red-500">Este campo es obligatorio</small>
         }
       </fieldset>
-  
+
       <fieldset>
         <label for="password">Contraseña</label>
-        <input pInputText formControlName="password" id="surnames" type="password" required>
+        <input
+          pInputText
+          formControlName="password"
+          id="surnames"
+          type="password"
+          required
+        />
         @if (isSubmitted && !formGroup.value['password']) {
-          <small class="text-red-500">Este campo es obligatorio</small>
+        <small class="text-red-500">Este campo es obligatorio</small>
         }
       </fieldset>
-  
+
       <fieldset>
         <label for="role">Rol</label>
-        <p-selectButton [options]="userRoleOptions" optionLabel="label" optionValue="value" formControlName="role" />
+        <p-selectButton
+          [options]="userRoleOptions"
+          optionLabel="label"
+          optionValue="value"
+          formControlName="role"
+        />
       </fieldset>
     </form>
   </ng-template>
 
   <ng-template pTemplate="footer">
-    <p-button (click)="submit()" icon="pi pi-save" label="Añadir" styleClass="p-button-success" />
+    <p-button
+      (click)="submit()"
+      icon="pi pi-save"
+      label="Añadir"
+      styleClass="p-button-success"
+    />
   </ng-template>
 </p-dialog>
 
