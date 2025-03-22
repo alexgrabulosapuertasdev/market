@@ -15,6 +15,8 @@ import { UserResponse } from '../domain/interface/user.response';
 import { UserDelete } from '../application/delete/user.delete';
 import { UserUpdateDto } from './dto/user-update.dto';
 import { UserUpdate } from '../application/update/user.update';
+import { USER_ROLE } from '../domain/enum/user.role';
+import { Roles } from '../../auth/infrastructure/decorators/roles.decorator';
 
 @Controller('user')
 export class UserController {
@@ -26,11 +28,13 @@ export class UserController {
   ) {}
 
   @Get()
+  @Roles(USER_ROLE.ADMIN)
   findAll(): Promise<UserResponse[]> {
     return this.userFindAll.run();
   }
 
   @Post()
+  @Roles(USER_ROLE.ADMIN)
   create(@Body() userCreateDto: UserCreateDto): Promise<UserResponse> {
     return this.userCreate.run({
       ...userCreateDto,
@@ -39,6 +43,7 @@ export class UserController {
   }
 
   @Put(':id')
+  @Roles(USER_ROLE.ADMIN)
   update(
     @Body() userUpdateDto: UserUpdateDto,
     @Param('id') id: string,
@@ -47,6 +52,7 @@ export class UserController {
   }
 
   @Delete(':id')
+  @Roles(USER_ROLE.ADMIN)
   delete(@Param('id') id: string): Promise<void> {
     return this.userDelete.run(id);
   }

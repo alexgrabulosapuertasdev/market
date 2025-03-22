@@ -16,6 +16,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ProductFindAll } from '../application/find-all/product.find-all';
 import { ProductFindOneById } from '../application/find-one-by-id/product.find-one-by-id';
 import { Public } from '../../auth/infrastructure/decorators/public.decorator';
+import { Roles } from '../../auth/infrastructure/decorators/roles.decorator';
+import { USER_ROLE } from '../../user/domain/enum/user.role';
 
 @Controller('product')
 export class ProductController {
@@ -38,6 +40,7 @@ export class ProductController {
   }
 
   @Post()
+  @Roles(USER_ROLE.ADMIN, USER_ROLE.EMPLOYEE)
   @UseInterceptors(FileInterceptor('image'))
   async create(
     @Body() productCreateDto: ProductCreateDto,

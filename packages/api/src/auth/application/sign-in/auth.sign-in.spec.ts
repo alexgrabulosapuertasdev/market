@@ -29,7 +29,7 @@ describe('AuthSignIn', () => {
   it('should return a token when credentials are valid', async () => {
     const token = 'token';
     const user = UserMother.create();
-    const { id, name, password } = user.toPrimitives();
+    const { id, name, password, role } = user.toPrimitives();
     const credentials: AuthSignInRequest = { name, password };
     jest.spyOn(userRepository, 'findOneByName').mockResolvedValue(user);
     jest.spyOn(jwtService, 'signAsync').mockResolvedValue(token);
@@ -38,7 +38,7 @@ describe('AuthSignIn', () => {
     const result = await authSignIn.run(credentials);
 
     expect(userRepository.findOneByName).toHaveBeenCalledWith(credentials.name);
-    expect(jwtService.signAsync).toHaveBeenCalledWith({ id, name });
+    expect(jwtService.signAsync).toHaveBeenCalledWith({ id, name, role });
     expect(result).toEqual({ token });
   });
 });

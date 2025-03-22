@@ -8,8 +8,8 @@ import { AuthResponse } from '../domain/interfaces/auth.response';
 export class AuthController {
   constructor(private readonly authSignIn: AuthSignIn) {}
 
-  @Public()
   @Post('login')
+  @Public()
   async signIn(@Body() signInDto: AuthSignInDto): Promise<AuthResponse> {
     return this.authSignIn.run(signInDto);
   }

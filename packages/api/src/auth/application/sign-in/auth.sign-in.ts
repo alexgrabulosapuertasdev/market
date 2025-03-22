@@ -28,7 +28,11 @@ export class AuthSignIn {
       throw new Unauthorized('Invalid password');
     }
 
-    const payload = { id: userPrimitives.id, name: userPrimitives.name };
+    const payload = {
+      id: userPrimitives.id,
+      name: userPrimitives.name,
+      role: userPrimitives.role,
+    };
 
     return { token: await this.jwtService.signAsync(payload) };
   }
