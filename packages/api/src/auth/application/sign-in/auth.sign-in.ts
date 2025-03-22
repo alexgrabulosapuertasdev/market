@@ -14,9 +14,9 @@ export class AuthSignIn {
   ) {}
 
   async run(credentials: AuthSignInRequest): Promise<AuthResponse> {
-    const { name, password } = credentials;
+    const { email, password } = credentials;
 
-    const user = await this.userRepository.findOneByName(name);
+    const user = await this.userRepository.findOneByEmail(email);
     const userPrimitives = user.toPrimitives();
 
     const passwordIsValid: boolean = await compareHash(
@@ -31,6 +31,7 @@ export class AuthSignIn {
     const payload = {
       id: userPrimitives.id,
       name: userPrimitives.name,
+      email: userPrimitives.email,
       role: userPrimitives.role,
     };
 

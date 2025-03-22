@@ -9,7 +9,6 @@ import { UserTypeorm } from '../src/user/infrastructure/persistence/entity/user-
 import { MariadbConfig } from '../src/shared/infrastructure/persistence/mariadb.config';
 import { UserMother } from '../src/user/domain/mothers/user.mother';
 import { encryptPassword } from '../src/user/domain/services/encrypt-password';
-import { compareHash } from '../src/shared/domain/encrypt/encrypt';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
@@ -53,16 +52,9 @@ describe('AuthController (e2e)', () => {
         password: passwordEncripted,
       });
 
-      console.log({
-        user: await userRepository.findOne({ where: { name: user.name } }),
-        name: user.name,
-        password: user.password,
-        isValid: await compareHash(user.password, passwordEncripted),
-      });
-
       const { body, status } = await request(app.getHttpServer())
         .post('/auth/login')
-        .send({ name: user.name, password: user.password });
+        .send({ email: user.email, password: user.password });
 
       expect(status).toBe(HttpStatus.CREATED);
       expect(body.token).toBeDefined();

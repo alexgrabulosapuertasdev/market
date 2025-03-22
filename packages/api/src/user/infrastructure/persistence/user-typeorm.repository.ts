@@ -29,11 +29,11 @@ export class UserTypeormRepository implements UserRepository {
     return User.create(user);
   }
 
-  async findOneByName(name: string): Promise<User> {
-    const user = await this.userRepository.findOne({ where: { name } });
+  async findOneByEmail(email: string): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { email } });
 
     if (!user) {
-      throw new NotFound('There are no users with this name');
+      throw new NotFound('There are no users with this email');
     }
 
     return User.create(user);
