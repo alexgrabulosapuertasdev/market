@@ -16,7 +16,7 @@ describe('AuthSignIn', () => {
     testingModule = await Test.createTestingModule({
       providers: [
         AuthSignIn,
-        { provide: UserRepository, useValue: { findOneByName: jest.fn() } },
+        { provide: UserRepository, useValue: { findOneByEmail: jest.fn() } },
         { provide: JwtService, useValue: { signAsync: jest.fn() } },
       ],
     }).compile();
