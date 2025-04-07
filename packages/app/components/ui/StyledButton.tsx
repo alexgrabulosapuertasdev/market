@@ -9,7 +9,7 @@ interface Props extends ViewProps {
   icon?: string;
   iconSize?: 'small';
   small?: boolean;
-  format?: 'danger' | 'transparent';
+  format?: 'success' | 'danger' | 'transparent';
 }
 
 export default function StyledButton({
@@ -57,6 +57,9 @@ const styles = StyleSheet.create({
   small: {
     aspectRatio: 1,
     width: 20,
+  },
+  success: {
+    backgroundColor: THEME.colors.green,
   },
   danger: {
     backgroundColor: THEME.colors.red,

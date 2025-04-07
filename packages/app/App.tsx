@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { CartProvider } from './contexts/CartContext';
 import CartList from './components/cart/CartList';
 import Header from './components/partials/Header';
+import LoginScreen from './pages/login/LoginScreen';
 import ProductDetailScreen from './pages/products/ProductDetailScreen';
 import Products from './pages/products/Products';
 import { THEME } from './theme';
@@ -15,6 +16,7 @@ const linking = {
     screens: {
       Products: '',
       ProductDetail: 'product/:id',
+      Login: 'login',
     },
   },
 };
@@ -35,6 +37,11 @@ export default function App() {
             <Stack.Screen
               name="ProductDetail"
               component={ProductDetailScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Login"
+              component={LoginScreen}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>

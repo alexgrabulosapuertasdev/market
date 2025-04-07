@@ -8,6 +8,7 @@ export const THEME = {
     details: '#CCCCCC',
     white: '#EEEEEE',
     red: '#AE0000',
+    green: '#28A745',
   },
   fontSizes: {
     small: 16,
@@ -22,6 +23,7 @@ export const THEME = {
   },
   borderWidth: 1,
   padding: {
+    small: 8,
     item: 16,
     container: 24,
     containerXL: 48,
