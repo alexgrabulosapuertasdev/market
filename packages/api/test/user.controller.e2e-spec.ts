@@ -1,3 +1,4 @@
+import { CacheModule } from '@nestjs/cache-manager';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -5,6 +6,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import * as request from 'supertest';
 import { Repository } from 'typeorm';
 import { AuthSignIn } from '../src/auth/application/sign-in/auth.sign-in';
+import { RedisConfig } from '../src/shared/infrastructure/persistence/redis.config';
 import { UserMother } from '../src/user/domain/mothers/user.mother';
 import { MariadbConfig } from '../src/shared/infrastructure/persistence/mariadb.config';
 import { UserTypeorm } from '../src/user/infrastructure/persistence/entity/user-typeorm.entity';
@@ -23,6 +25,7 @@ describe('UserController (e2e)', () => {
       imports: [
         ConfigModule.forRoot({ envFilePath: '.env.test' }),
         MariadbConfig.createConnection(),
+        CacheModule.registerAsync(RedisConfig.createConnection()),
         UserModule,
       ],
     })

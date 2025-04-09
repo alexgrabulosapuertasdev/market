@@ -1,3 +1,4 @@
+import { CacheModule } from '@nestjs/cache-manager';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -5,6 +6,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import * as request from 'supertest';
 import { Repository } from 'typeorm';
 import { AuthSignIn } from '../src/auth/application/sign-in/auth.sign-in';
+import { RedisConfig } from '../src/shared/infrastructure/persistence/redis.config';
 import { SaleTypeorm } from '../src/sale/infrastructure/persistence/entity/sale-typeorm.entity';
 import { SaleModule } from '../src/sale/infrastructure/sale.module';
 import { MariadbConfig } from '../src/shared/infrastructure/persistence/mariadb.config';
@@ -32,6 +34,7 @@ describe('SaleController (e2e)', () => {
         ConfigModule.forRoot({ envFilePath: '.env.test' }),
         MariadbConfig.createConnection(),
         MongoImageConfig.createConnection(),
+        CacheModule.registerAsync(RedisConfig.createConnection()),
         SaleModule,
       ],
     })

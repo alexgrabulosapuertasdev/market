@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserTypeorm } from './persistence/entity/user-typeorm.entity';
 import { UserController } from './user.controller';
+import { UserRedisRepository } from './persistence/user-redis.repository';
 import { UserTypeormRepository } from './persistence/user-typeorm.repository';
 import { UserFindAll } from '../application/find-all/user.find-all';
 import { UserCreate } from '../application/create/user.create';
@@ -18,7 +19,11 @@ import { UserUpdate } from '../application/update/user.update';
     UserFindAll,
     UserUpdate,
     { provide: UserRepository, useClass: UserTypeormRepository },
+    UserRedisRepository,
   ],
-  exports: [{ provide: UserRepository, useClass: UserTypeormRepository }],
+  exports: [
+    { provide: UserRepository, useClass: UserTypeormRepository },
+    UserRedisRepository,
+  ],
 })
 export class UserModule {}

@@ -84,6 +84,9 @@ jobs:
           echo "MONGODB_IMAGE_PORT=27017" >> .env.test
           echo "MONGODB_IMAGE_USERNAME=${{ secrets.MONGODB_IMAGE_USERNAME_TEST }}" >> .env.test
           echo "MONGODB_IMAGE_PASSWORD=${{ secrets.MONGODB_IMAGE_PASSWORD_TEST }}" >> .env.test
+          echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD_TEST }}" >> .env.test
+          echo "REDIS_HOST=${{ secrets.REDIS_HOST_TEST }}" >> .env.test
+          echo "REDIS_PORT=6379" >> .env.test
           npm install
       - name: Test e2e
         run: cd ./packages/api && npm run test:e2e
