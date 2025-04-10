@@ -63,16 +63,15 @@ jobs:
           MONGO_INITDB_DATABASE: ${{ secrets.MONGODB_IMAGE_NAME_TEST }}
         ports:
           - 27017:27017
-      redis:
-        image: redis:7
-        env:
-          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD_TEST }}
-        ports:
-          - 6379:6379
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Start Redis
+        uses: supercharge/redis-github-action@1.7.0
+        with:
+          redis-version: '7'
+          redis-password: ${{ secrets.REDIS_PASSWORD_TEST }}
       - uses: actions/setup-node@v4
         with:
           cache: 'npm'
