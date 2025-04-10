@@ -63,6 +63,12 @@ jobs:
           MONGO_INITDB_DATABASE: ${{ secrets.MONGODB_IMAGE_NAME_TEST }}
         ports:
           - 27017:27017
+      redis:
+        image: redis:7
+        env:
+          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD_TEST }}
+        ports:
+          - 6379:6379
     steps:
       - uses: actions/checkout@v2
         with:
