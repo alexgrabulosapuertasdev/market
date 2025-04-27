@@ -18,9 +18,7 @@ export class SaleTypeormRepository implements SaleRepository {
     await this.saleRepository.save({
       id: primitives.id,
       date: primitives.date,
-      user: {
-        id: primitives.userId,
-      },
+      userId: primitives.userId,
       totalAmount: primitives.totalAmount,
       saleProducts: primitives.saleProducts.map((saleProduct) => ({
         id: saleProduct.id,
@@ -29,14 +27,12 @@ export class SaleTypeormRepository implements SaleRepository {
 
     const saleResponse = await this.saleRepository.findOne({
       where: { id: primitives.id },
-      relations: ['user', 'saleProducts', 'saleProducts.product'],
+      relations: ['saleProducts', 'saleProducts.product'],
       select: {
         id: true,
         date: true,
         totalAmount: true,
-        user: {
-          id: true,
-        },
+        userId: true,
         saleProducts: {
           id: true,
           price: true,
@@ -52,7 +48,7 @@ export class SaleTypeormRepository implements SaleRepository {
     return Sale.create({
       id: saleResponse.id,
       date: saleResponse.date,
-      userId: saleResponse.user.id,
+      userId: saleResponse.userId,
       saleProducts: saleResponse.saleProducts.map((saleProduct) => ({
         id: saleProduct.id,
         name: saleProduct.product.name,

@@ -7,13 +7,11 @@ import { SaleRepository } from '../../domain/ports/sale.repository';
 import { ProductRepository } from '../../../product/domain/ports/product.repository';
 import { SaleProduct } from '../../../sale-product/domain/aggregates/sale-product';
 import { SaleProductRepository } from '../../../sale-product/domain/ports/sale-product.repository';
-import { UserRepository } from '../../../user/domain/ports/user.repository';
 
 @Injectable()
 export class SaleCreate {
   constructor(
     private readonly saleRepository: SaleRepository,
-    private readonly userRepository: UserRepository,
     private readonly productRepository: ProductRepository,
     private readonly saleProductRepository: SaleProductRepository,
   ) {}
@@ -22,10 +20,9 @@ export class SaleCreate {
     const { id, date, userId, products } = saleCreateRequest;
     const productsId = products.map(({ productId }) => productId);
 
-    const [user, productsResponse] = await Promise.all([
-      this.userRepository.findOneById(userId),
-      this.productRepository.findAllByIds(productsId),
-    ]);
+    const productsResponse = await this.productRepository.findAllByIds(
+      productsId,
+    );
 
     const productsMap = productsResponse.reduce((map, product) => {
       const { id, name, price } = product.toPrimitives();
@@ -64,10 +61,7 @@ export class SaleCreate {
       id: saleResponse.id,
       date: saleResponse.date,
       totalAmount: saleResponse.totalAmount,
-      user: {
-        id: saleResponse.userId,
-        name: user.name.value,
-      },
+      userId: saleResponse.userId,
       saleProducts: saleResponse.saleProducts.map((saleProduct) => ({
         id: saleProduct.id,
         name: saleProduct.name,

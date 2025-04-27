@@ -8,13 +8,10 @@ import { ProductRepository } from '../../../product/domain/ports/product.reposit
 import { SaleMother } from '../../../sale/domain/mothers/sale.mother';
 import { SaleProductRepository } from '../../../sale-product/domain/ports/sale-product.repository';
 import { SaleProductMother } from '../../../sale-product/domain/mothers/sale-product.mother';
-import { UserMother } from '../../../user/domain/mothers/user.mother';
-import { UserRepository } from '../../../user/domain/ports/user.repository';
 
 describe('SaleCreate', () => {
   let saleCreate: SaleCreate;
   let saleRepository: jest.Mocked<SaleRepository>;
-  let userRepository: jest.Mocked<UserRepository>;
   let productRepository: jest.Mocked<ProductRepository>;
   let saleProductRepository: jest.Mocked<SaleProductRepository>;
 
@@ -23,7 +20,6 @@ describe('SaleCreate', () => {
       providers: [
         SaleCreate,
         { provide: SaleRepository, useValue: { save: jest.fn() } },
-        { provide: UserRepository, useValue: { findOneById: jest.fn() } },
         { provide: ProductRepository, useValue: { findAllByIds: jest.fn() } },
         { provide: SaleProductRepository, useValue: { saveMany: jest.fn() } },
       ],
@@ -31,7 +27,6 @@ describe('SaleCreate', () => {
 
     saleCreate = module.get<SaleCreate>(SaleCreate);
     saleRepository = module.get(SaleRepository);
-    userRepository = module.get(UserRepository);
     productRepository = module.get(ProductRepository);
     saleProductRepository = module.get(SaleProductRepository);
   });
@@ -43,9 +38,6 @@ describe('SaleCreate', () => {
       userId: randomUUID(),
       products: [{ productId: randomUUID(), quantity: 2 }],
     };
-
-    const mockUser = UserMother.create({ id: saleRequest.userId });
-    userRepository.findOneById.mockResolvedValue(mockUser);
 
     const mockProduct = ProductMother.create({
       id: saleRequest.products[0].productId,
@@ -75,10 +67,9 @@ describe('SaleCreate', () => {
       date: saleRequest.date,
       totalAmount:
         saleRequest.products[0].quantity * mockProduct.toPrimitives().price,
-      user: { id: saleRequest.userId, name: mockUser.name.value },
+      userId: saleRequest.userId,
       saleProducts: [mockSaleProduct.toPrimitives()],
     });
-    expect(userRepository.findOneById).toHaveBeenCalledWith(saleRequest.userId);
     expect(productRepository.findAllByIds).toHaveBeenCalledWith([
       saleRequest.products[0].productId,
     ]);

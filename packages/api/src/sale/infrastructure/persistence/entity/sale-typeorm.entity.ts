@@ -2,13 +2,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { SaleProductTypeorm } from '../../../../sale-product/infrastructure/persistence/entity/sale-product-typeorm.entity';
-import { UserTypeorm } from '../../../../user/infrastructure/persistence/entity/user-typeorm.entity';
 
 @Entity({ name: 'sale' })
 export class SaleTypeorm {
@@ -21,8 +19,8 @@ export class SaleTypeorm {
   @Column({ type: 'float' })
   totalAmount: number;
 
-  @ManyToOne(() => UserTypeorm, (user) => user.sales)
-  user: UserTypeorm;
+  @Column()
+  userId: string;
 
   @OneToMany(() => SaleProductTypeorm, (saleProduct) => saleProduct.sale)
   saleProducts: SaleProductTypeorm[];

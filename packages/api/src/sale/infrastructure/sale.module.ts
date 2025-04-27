@@ -7,12 +7,10 @@ import { SaleTypeormRepository } from './persistence/sale-typeorm.repository';
 import { SaleProductModule } from '../../sale-product/infrastructure/sale-product.module';
 import { SaleRepository } from '../domain/ports/sale.repository';
 import { ProductModule } from '../../product/infrastructure/product.module';
-import { UserModule } from '../../user/infrastructure/user.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([SaleTypeorm]),
-    UserModule,
     ProductModule,
     SaleProductModule,
   ],

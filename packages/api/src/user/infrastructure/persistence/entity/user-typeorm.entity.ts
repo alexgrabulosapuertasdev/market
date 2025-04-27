@@ -3,11 +3,9 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { SaleTypeorm } from '../../../../sale/infrastructure/persistence/entity/sale-typeorm.entity';
 
 @Entity({ name: 'user' })
 export class UserTypeorm {
@@ -31,9 +29,6 @@ export class UserTypeorm {
     enum: USER_ROLE,
   })
   role: USER_ROLE;
-
-  @OneToMany(() => SaleTypeorm, (sale) => sale.user)
-  sales: SaleTypeorm[];
 
   @CreateDateColumn()
   createdAt: Date;

@@ -2,10 +2,7 @@ export interface SaleResponse {
   id: string;
   date: Date;
   totalAmount: number;
-  user: {
-    id: string;
-    name: string;
-  };
+  userId: string;
   saleProducts: Array<{
     id: string;
     name: string;
