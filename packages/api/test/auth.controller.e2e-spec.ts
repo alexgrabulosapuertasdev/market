@@ -1,5 +1,4 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import * as request from 'supertest';
@@ -16,7 +15,7 @@ describe('AuthController (e2e)', () => {
 
   beforeAll(async () => {
     testingModule = await Test.createTestingModule({
-      imports: [ConfigModule.forRoot({ envFilePath: '.env.test' }), AuthModule],
+      imports: [AuthModule],
     }).compile();
 
     userRepository = testingModule.get<Repository<UserTypeorm>>(

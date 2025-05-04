@@ -16,7 +16,10 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
+    ConfigModule.forRoot({
+      envFilePath: process.env.NODE_ENV === 'test' ? '.env.test' : '.env',
+      isGlobal: true,
+    }),
     TypeOrmModule.forFeature([UserTypeorm]),
     UserMariadbConfig.createConnection(),
     CacheModule.registerAsync(UserRedisConfig.createConnection()),

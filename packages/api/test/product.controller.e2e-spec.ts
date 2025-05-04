@@ -1,6 +1,5 @@
 import { faker } from '@faker-js/faker';
 import { HttpStatus, INestApplication } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Model } from 'mongoose';
@@ -21,10 +20,7 @@ describe('ProductController (e2e)', () => {
       run: jest.fn().mockResolvedValue({ token: 'token' }),
     };
     testingModule = await Test.createTestingModule({
-      imports: [
-        ConfigModule.forRoot({ envFilePath: '.env.test' }),
-        ProductModule,
-      ],
+      imports: [ProductModule],
     })
       .overrideProvider(AuthSignIn)
       .useValue(authSignInMock)

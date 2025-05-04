@@ -1,5 +1,4 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import * as request from 'supertest';
@@ -19,7 +18,7 @@ describe('UserController (e2e)', () => {
       run: jest.fn().mockResolvedValue({ token: 'token' }),
     };
     testingModule = await Test.createTestingModule({
-      imports: [ConfigModule.forRoot({ envFilePath: '.env.test' }), UserModule],
+      imports: [UserModule],
     })
       .overrideProvider(AuthSignIn)
       .useValue(authSignInMock)

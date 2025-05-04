@@ -1,5 +1,4 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Model } from 'mongoose';
@@ -25,7 +24,7 @@ describe('SaleController (e2e)', () => {
       run: jest.fn().mockResolvedValue({ token: 'token' }),
     };
     testingModule = await Test.createTestingModule({
-      imports: [ConfigModule.forRoot({ envFilePath: '.env.test' }), SaleModule],
+      imports: [SaleModule],
     })
       .overrideProvider(AuthSignIn)
       .useValue(authSignInMock)
