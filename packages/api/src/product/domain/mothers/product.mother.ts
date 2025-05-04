@@ -19,7 +19,7 @@ interface ProductParams {
     originalname: string;
     mimetype: string;
     size: number;
-    base64: string;
+    data: Buffer;
   };
 }
 

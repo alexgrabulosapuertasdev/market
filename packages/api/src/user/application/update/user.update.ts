@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserUpdateRequest } from './user.update.request';
 import { User } from '../../domain/aggregates/user';
-import { UserResponse } from '../../domain/interface/user.response';
 import { UserRepository } from '../../domain/ports/user.repository';
 import { encryptPassword } from '../../domain/services/encrypt-password';
 
@@ -9,7 +8,7 @@ import { encryptPassword } from '../../domain/services/encrypt-password';
 export class UserUpdate {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async run(userUpdateRequest: UserUpdateRequest): Promise<UserResponse> {
+  async run(userUpdateRequest: UserUpdateRequest): Promise<User> {
     const { id, password } = userUpdateRequest;
 
     if (password) {
@@ -24,9 +23,6 @@ export class UserUpdate {
 
     const userResponse = await this.userRepository.save(userUpdated);
 
-    const user = userResponse.toPrimitives();
-    delete user.password;
-
-    return user;
+    return userResponse;
   }
 }

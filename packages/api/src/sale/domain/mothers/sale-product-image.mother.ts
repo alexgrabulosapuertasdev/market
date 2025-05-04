@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { ProductImage } from '../aggregates/product-image';
+import { SaleProductImage } from '../aggregates/sale-product-image';
 
 interface Params {
   originalname: string;
@@ -8,8 +8,8 @@ interface Params {
   data: Buffer;
 }
 
-export class ProductImageMother {
-  static create(value?: Params): ProductImage {
+export class SaleProductImageMother {
+  static create(value?: Params): SaleProductImage {
     const primitives: Params = {
       originalname: faker.commerce.productName(),
       mimetype: 'image/jpeg',
@@ -18,6 +18,6 @@ export class ProductImageMother {
       ...value,
     };
 
-    return new ProductImage(primitives);
+    return new SaleProductImage(primitives);
   }
 }

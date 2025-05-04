@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { ProductRepository } from '../../domain/ports/product.repository';
-import { ProductResponse } from '../../domain/interface/product.response';
+import { Product } from '../../domain/aggregates/product';
 
 @Injectable()
 export class ProductFindAll {
   constructor(private readonly productRepository: ProductRepository) {}
 
-  async run(filter?: string): Promise<ProductResponse[]> {
+  async run(filter?: string): Promise<Product[]> {
     const products = await this.productRepository.findAll(filter);
 
-    return products.map((product) => product.toPrimitives());
+    return products;
   }
 }

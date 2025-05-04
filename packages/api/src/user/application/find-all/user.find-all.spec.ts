@@ -30,14 +30,7 @@ describe('UserFindAll', () => {
 
     const response = await userFindAll.run();
 
-    expect(response).toEqual(
-      users.map((user) => {
-        const userResoponse = user.toPrimitives();
-        delete userResoponse.password;
-
-        return userResoponse;
-      }),
-    );
+    expect(response).toEqual(users);
   });
 
   it('should return an empty array if there are no users', async () => {

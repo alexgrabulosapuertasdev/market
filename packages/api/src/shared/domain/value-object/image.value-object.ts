@@ -1,10 +1,11 @@
+import { BufferValueObject } from './buffer.value-object';
 import { InvalidArgument } from '../exception/invalid-argument';
 
 interface ImageValue {
   originalname: string;
   mimetype: string;
   size: number;
-  base64: string;
+  data: Buffer;
 }
 
 export class ImageValueObject {
@@ -27,10 +28,12 @@ export class ImageValueObject {
       throw new InvalidArgument(`<${this.constructor.name} size> is required`);
     }
 
-    if (!value.base64) {
+    if (!value.data) {
       throw new InvalidArgument(
         `<${this.constructor.name} base64> is required`,
       );
     }
+
+    new BufferValueObject(value.data);
   }
 }

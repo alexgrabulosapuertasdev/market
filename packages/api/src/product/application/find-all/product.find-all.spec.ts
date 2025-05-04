@@ -30,7 +30,7 @@ describe('ProductFindAll', () => {
 
     const response = await productFindAll.run();
 
-    expect(response).toEqual(products.map((product) => product.toPrimitives()));
+    expect(response).toEqual(products);
   });
 
   it('should return an empty array if there are no products', async () => {

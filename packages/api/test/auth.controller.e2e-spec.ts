@@ -1,4 +1,3 @@
-import { CacheModule } from '@nestjs/cache-manager';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -6,9 +5,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import * as request from 'supertest';
 import { Repository } from 'typeorm';
 import { AuthModule } from '../src/auth/infrastructure/auth.module';
-import { RedisConfig } from '../src/shared/infrastructure/persistence/redis.config';
 import { UserTypeorm } from '../src/user/infrastructure/persistence/entity/user-typeorm.entity';
-import { MariadbConfig } from '../src/shared/infrastructure/persistence/mariadb.config';
 import { UserMother } from '../src/user/domain/mothers/user.mother';
 import { encryptPassword } from '../src/user/domain/services/encrypt-password';
 
@@ -19,12 +16,7 @@ describe('AuthController (e2e)', () => {
 
   beforeAll(async () => {
     testingModule = await Test.createTestingModule({
-      imports: [
-        ConfigModule.forRoot({ envFilePath: '.env.test' }),
-        MariadbConfig.createConnection(),
-        CacheModule.registerAsync(RedisConfig.createConnection()),
-        AuthModule,
-      ],
+      imports: [ConfigModule.forRoot({ envFilePath: '.env.test' }), AuthModule],
     }).compile();
 
     userRepository = testingModule.get<Repository<UserTypeorm>>(

@@ -26,11 +26,11 @@ describe('ProductFindOneById', () => {
   });
 
   it('should return a product by id', async () => {
-    const products = ProductMother.create();
-    productRepository.findOneById.mockResolvedValue(products);
+    const product = ProductMother.create();
+    productRepository.findOneById.mockResolvedValue(product);
 
-    const response = await productFindOneById.run(products.toPrimitives().id);
+    const response = await productFindOneById.run(product.toPrimitives().id);
 
-    expect(response).toEqual(products.toPrimitives());
+    expect(response).toEqual(product);
   });
 });

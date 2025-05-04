@@ -1,47 +1,42 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
+import { Model } from 'mongoose';
 import * as request from 'supertest';
-import { Repository } from 'typeorm';
 import { AuthSignIn } from '../src/auth/application/sign-in/auth.sign-in';
-import { SaleTypeorm } from '../src/sale/infrastructure/persistence/entity/sale-typeorm.entity';
-import { SaleModule } from '../src/sale/infrastructure/sale.module';
-import { MariadbConfig } from '../src/shared/infrastructure/persistence/mariadb.config';
-import { MongoImageConfig } from '../src/shared/infrastructure/persistence/mongo-image.config';
-import { UserIdMother } from '../src/user/domain/mothers/user-id.mother';
 import { ProductMother } from '../src/product/domain/mothers/product.mother';
-import { ProductTypeorm } from '../src/product/infrastructure/persistence/entity/product-typeorm.entity';
+import { ProductMongoose } from '../src/product/infrastructure/persistence/entity/product-mongoose.model';
+import { SaleModule } from '../src/sale/infrastructure/sale.module';
 import { SaleDateMother } from '../src/sale/domain/mothers/sale-date.mother';
-import { SaleProductQuantityMother } from '../src/sale-product/domain/mothers/sale-product-quantity.mother';
+import { SaleProductQuantityMother } from '../src/sale/domain/mothers/sale-product-quantity.mother';
+import { UserIdMother } from '../src/user/domain/mothers/user-id.mother';
+import { SaleCreateDto } from '../src/sale/infrastructure/dto/sale-create.dto';
+import { SaleMongoose } from '../src/sale/infrastructure/persistence/entity/sale-mongoose.model';
 
 describe('SaleController (e2e)', () => {
   let app: INestApplication;
   let testingModule: TestingModule;
-  let saleRepository: Repository<SaleTypeorm>;
-  let productRepository: Repository<ProductTypeorm>;
+  let saleRepository: Model<SaleMongoose>;
+  let productRepository: Model<ProductMongoose>;
 
   beforeAll(async () => {
     const authSignInMock = {
       run: jest.fn().mockResolvedValue({ token: 'token' }),
     };
     testingModule = await Test.createTestingModule({
-      imports: [
-        ConfigModule.forRoot({ envFilePath: '.env.test' }),
-        MariadbConfig.createConnection(),
-        MongoImageConfig.createConnection(),
-        SaleModule,
-      ],
+      imports: [ConfigModule.forRoot({ envFilePath: '.env.test' }), SaleModule],
     })
       .overrideProvider(AuthSignIn)
       .useValue(authSignInMock)
       .compile();
 
-    saleRepository = testingModule.get<Repository<SaleTypeorm>>(
-      getRepositoryToken(SaleTypeorm),
+    saleRepository = testingModule.get<Model<SaleMongoose>>(
+      getModelToken(SaleMongoose.name, 'sale'),
     );
-    productRepository = testingModule.get<Repository<ProductTypeorm>>(
-      getRepositoryToken(ProductTypeorm),
+
+    productRepository = testingModule.get<Model<ProductMongoose>>(
+      getModelToken(ProductMongoose.name, 'product'),
     );
 
     app = testingModule.createNestApplication();
@@ -49,9 +44,8 @@ describe('SaleController (e2e)', () => {
   });
 
   const cleanupDatabase = async () => {
-    await saleRepository.query('DELETE FROM sale_product;');
-    await saleRepository.query('DELETE FROM sale;');
-    await saleRepository.query('DELETE FROM product;');
+    await saleRepository.deleteMany({});
+    await productRepository.deleteMany({});
   };
 
   beforeEach(async () => {
@@ -72,22 +66,16 @@ describe('SaleController (e2e)', () => {
         ProductMother.create().toPrimitives(),
       ].sort((a, b) => a.id.localeCompare(b.id));
 
-      await productRepository.save([...products]);
-
-      const saleCreateDto = {
+      const saleCreateDto: SaleCreateDto = {
         date: new Date(SaleDateMother.create().value.setMilliseconds(0)),
         userId,
-        products: [
-          {
-            productId: products[0].id,
-            quantity: SaleProductQuantityMother.create().value,
-          },
-          {
-            productId: products[1].id,
-            quantity: SaleProductQuantityMother.create().value,
-          },
-        ],
+        products: products.map((product) => ({
+          productId: product.id,
+          quantity: SaleProductQuantityMother.create().value,
+        })),
       };
+
+      await productRepository.insertMany(products);
 
       const { body, status } = await request(app.getHttpServer())
         .post('/sale')
@@ -101,25 +89,29 @@ describe('SaleController (e2e)', () => {
           saleCreateDto.products[1].quantity * products[1].price,
       );
       expect(body.userId).toBe(saleCreateDto.userId);
-      expect(body.saleProducts.length).toBe(2);
+      expect(body.products.length).toBe(2);
 
-      const saleProducts = body.saleProducts.sort((a, b) =>
+      const saleProducts = body.products.sort((a, b) =>
         a.productId.localeCompare(b.productId),
       );
-      const saleProductsLength = saleProducts.length;
 
-      for (let i = 0; i < saleProductsLength; i++) {
-        expect(saleProducts[i].id).toBeDefined();
-        expect(saleProducts[i].name).toBe(products[i].name);
-        expect(saleProducts[i].price).toBe(products[i].price);
-        expect(saleProducts[i].quantity).toBe(
-          saleCreateDto.products[i].quantity,
-        );
-        expect(saleProducts[i].totalAmount).toBe(
-          products[i].price * saleCreateDto.products[i].quantity,
-        );
-        expect(saleProducts[i].productId).toBe(products[i].id);
-      }
+      expect(saleProducts).toEqual(
+        products.map(({ image: { data, ...image }, id, ...product }, i) => {
+          const quantity = saleCreateDto.products[i].quantity;
+          delete product.stock;
+
+          return {
+            ...product,
+            productId: id,
+            quantity,
+            totalAmount: product.price * quantity,
+            image: {
+              ...image,
+              base64: data.toString('base64'),
+            },
+          };
+        }),
+      );
     });
   });
 });

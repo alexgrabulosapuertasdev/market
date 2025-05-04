@@ -1,31 +1,41 @@
 version: '3.8'
 
 services:
-  mariadb:
+  user-mariadb:
     image: mariadb:10.6
-    container_name: mariadb
+    container_name: user-mariadb
     environment:
-      MARIADB_ROOT_PASSWORD: $MARIADB_PASSWORD
-      MARIADB_DATABASE: $MARIADB_NAME
-      MARIADB_USER: $MARIADB_USERNAME
-      MARIADB_PASSWORD: $MARIADB_PASSWORD
+      MARIADB_ROOT_PASSWORD: $USER_MARIADB_PASSWORD
+      MARIADB_DATABASE: $USER_MARIADB_NAME
+      MARIADB_USER: $USER_MARIADB_USERNAME
+      MARIADB_PASSWORD: $USER_MARIADB_PASSWORD
     ports:
-      - $MARIADB_PORT:3306
+      - $USER_MARIADB_PORT:3306
 
-  mongodb:
-    image: mongo
-    container_name: mongodb
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: $MONGODB_IMAGE_USERNAME
-      MONGO_INITDB_ROOT_PASSWORD: $MONGODB_IMAGE_PASSWORD
-      MONGO_INITDB_DATABASE: $MONGODB_IMAGE_NAME
-    ports:
-      - $MONGODB_IMAGE_PORT:27017
-
-  redis:
+  user-redis:
     image: redis:7
-    container_name: redis
+    container_name: user-redis
     ports:
-      - $REDIS_PORT:6379
+      - $USER_REDIS_PORT:6379
     command: >
-      redis-server --requirepass $REDIS_PASSWORD
+      redis-server --requirepass $USER_REDIS_PASSWORD
+
+  product-mongodb:
+    image: mongo
+    container_name: product-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: $PRODUCT_MONGODB_USERNAME
+      MONGO_INITDB_ROOT_PASSWORD: $PRODUCT_MONGODB_PASSWORD
+      MONGO_INITDB_DATABASE: $PRODUCT_MONGODB_NAME
+    ports:
+      - $PRODUCT_MONGODB_PORT:27017
+
+  sale-mongodb:
+    image: mongo
+    container_name: sale-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: $SALE_MONGODB_USERNAME
+      MONGO_INITDB_ROOT_PASSWORD: $SALE_MONGODB_PASSWORD
+      MONGO_INITDB_DATABASE: $SALE_MONGODB_NAME
+    ports:
+      - $SALE_MONGODB_PORT:27017

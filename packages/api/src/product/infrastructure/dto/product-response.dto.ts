@@ -1,6 +1,6 @@
-import { PRODUCT_CATEGORY } from '../enum/product-category';
+import { PRODUCT_CATEGORY } from '../../domain/enum/product-category';
 
-export interface ProductResponse {
+export interface ProductResponseDTO {
   id: string;
   name: string;
   description: string;

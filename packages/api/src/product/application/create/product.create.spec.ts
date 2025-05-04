@@ -34,6 +34,6 @@ describe('ProductCreate', () => {
     const response = await productCreate.run(product.toPrimitives());
 
     expect(productRepository.save).toHaveBeenCalledWith(product);
-    expect(response).toEqual(product.toPrimitives());
+    expect(response).toEqual(product);
   });
 });

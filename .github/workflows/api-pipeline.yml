@@ -46,23 +46,31 @@ jobs:
     needs: [build]
     runs-on: ubuntu-20.04
     services:
-      mariadb:
+      user-mariadb:
         image: mariadb:10.6
         env:
-          MARIADB_ROOT_PASSWORD: ${{ secrets.MARIADB_PASSWORD_TEST }}
-          MARIADB_DATABASE: ${{ secrets.MARIADB_NAME_TEST }}
-          MARIADB_USER: ${{ secrets.MARIADB_USERNAME_TEST }}
-          MARIADB_PASSWORD: ${{ secrets.MARIADB_PASSWORD_TEST }}
+          MARIADB_ROOT_PASSWORD: ${{ secrets.USER_MARIADB_PASSWORD_TEST }}
+          MARIADB_DATABASE: ${{ secrets.USER_MARIADB_NAME_TEST }}
+          MARIADB_USER: ${{ secrets.USER_MARIADB_USERNAME_TEST }}
+          MARIADB_PASSWORD: ${{ secrets.USER_MARIADB_PASSWORD_TEST }}
         ports:
           - 3306:3306
-      mongodb:
+      product-mongodb:
         image: mongo
         env:
-          MONGO_INITDB_ROOT_USERNAME: ${{ secrets.MONGODB_IMAGE_USERNAME_TEST }}
-          MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.MONGODB_IMAGE_PASSWORD_TEST }}
-          MONGO_INITDB_DATABASE: ${{ secrets.MONGODB_IMAGE_NAME_TEST }}
+          MONGO_INITDB_ROOT_USERNAME: ${{ secrets.PRODUCT_MONGODB_USERNAME_TEST }}
+          MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.PRODUCT_MONGODB_PASSWORD_TEST }}
+          MONGO_INITDB_DATABASE: ${{ secrets.PRODUCT_MONGODB_NAME_TEST }}
         ports:
           - 27017:27017
+      sale-mongodb:
+        image: mongo
+        env:
+          MONGO_INITDB_ROOT_USERNAME: ${{ secrets.SALE_MONGODB_USERNAME_TEST }}
+          MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.SALE_MONGODB_PASSWORD_TEST }}
+          MONGO_INITDB_DATABASE: ${{ secrets.SALE_MONGODB_NAME_TEST }}
+        ports:
+          - 27018:27017
     steps:
       - uses: actions/checkout@v2
         with:
@@ -71,27 +79,36 @@ jobs:
         uses: supercharge/redis-github-action@1.7.0
         with:
           redis-version: '7'
-          redis-password: ${{ secrets.REDIS_PASSWORD_TEST }}
+          redis-password: ${{ secrets.USER_REDIS_PASSWORD_TEST }}
       - uses: actions/setup-node@v4
         with:
           cache: 'npm'
           node-version: '20'
-      - name: Install dependencies
+      - name: create environment variables
         run: |
           cd ./packages/api
-          echo "MARIADB_NAME=${{ secrets.MARIADB_NAME_TEST }}" >> .env.test
-          echo "MARIADB_PORT=3306" >> .env.test
-          echo "MARIADB_HOST=${{ secrets.MARIADB_HOST_TEST }}" >> .env.test
-          echo "MARIADB_USERNAME=${{ secrets.MARIADB_USERNAME_TEST }}" >> .env.test
-          echo "MARIADB_PASSWORD=${{ secrets.MARIADB_PASSWORD_TEST }}" >> .env.test
-          echo "MONGODB_IMAGE_HOST=${{ secrets.MONGODB_IMAGE_HOST_TEST }}" >> .env.test
-          echo "MONGODB_IMAGE_NAME=${{ secrets.MONGODB_IMAGE_NAME_TEST }}" >> .env.test
-          echo "MONGODB_IMAGE_PORT=27017" >> .env.test
-          echo "MONGODB_IMAGE_USERNAME=${{ secrets.MONGODB_IMAGE_USERNAME_TEST }}" >> .env.test
-          echo "MONGODB_IMAGE_PASSWORD=${{ secrets.MONGODB_IMAGE_PASSWORD_TEST }}" >> .env.test
-          echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD_TEST }}" >> .env.test
-          echo "REDIS_HOST=${{ secrets.REDIS_HOST_TEST }}" >> .env.test
-          echo "REDIS_PORT=6379" >> .env.test
-          npm install
+          echo "USER_MARIADB_NAME=${{ secrets.USER_MARIADB_NAME_TEST }}" >> .env.test
+          echo "USER_MARIADB_PORT=3306" >> .env.test
+          echo "USER_MARIADB_HOST=${{ secrets.USER_MARIADB_HOST_TEST }}" >> .env.test
+          echo "USER_MARIADB_USERNAME=${{ secrets.USER_MARIADB_USERNAME_TEST }}" >> .env.test
+          echo "USER_MARIADB_PASSWORD=${{ secrets.USER_MARIADB_PASSWORD_TEST }}" >> .env.test
+
+          echo "USER_REDIS_PASSWORD=${{ secrets.USER_REDIS_PASSWORD_TEST }}" >> .env.test
+          echo "USER_REDIS_HOST=${{ secrets.USER_REDIS_HOST_TEST }}" >> .env.test
+          echo "USER_REDIS_PORT=6379" >> .env.test
+
+          echo "PRODUCT_MONGODB_HOST=${{ secrets.PRODUCT_MONGODB_HOST_TEST }}" >> .env.test
+          echo "PRODUCT_MONGODB_NAME=${{ secrets.PRODUCT_MONGODB_NAME_TEST }}" >> .env.test
+          echo "PRODUCT_MONGODB_PORT=27017" >> .env.test
+          echo "PRODUCT_MONGODB_USERNAME=${{ secrets.PRODUCT_MONGODB_USERNAME_TEST }}" >> .env.test
+          echo "PRODUCT_MONGODB_PASSWORD=${{ secrets.PRODUCT_MONGODB_PASSWORD_TEST }}" >> .env.test
+
+          echo "SALE_MONGODB_HOST=${{ secrets.SALE_MONGODB_HOST_TEST }}" >> .env.test
+          echo "SALE_MONGODB_NAME=${{ secrets.SALE_MONGODB_NAME_TEST }}" >> .env.test
+          echo "SALE_MONGODB_PORT=27018" >> .env.test
+          echo "SALE_MONGODB_USERNAME=${{ secrets.SALE_MONGODB_USERNAME_TEST }}" >> .env.test
+          echo "SALE_MONGODB_PASSWORD=${{ secrets.SALE_MONGODB_PASSWORD_TEST }}" >> .env.test
+      - name: Install dependencies
+        run: npm install
       - name: Test e2e
         run: cd ./packages/api && npm run test:e2e -- --detectOpenHandles --forceExit

@@ -1,9 +1,10 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { SaleCreateDto } from './dto/sale-create.dto';
+import { SaleResponseDto } from './dto/sale-response.dto';
 import { SaleCreate } from '../application/create/sale.create';
-import { SaleResponse } from '../domain/interfaces/sale-response';
 import { Public } from '../../auth/infrastructure/decorators/public.decorator';
+import { saleResponseMapper } from './mappers/sale-response.mapper';
 
 @Controller('sale')
 export class SaleController {
@@ -11,7 +12,7 @@ export class SaleController {
 
   @Post()
   @Public()
-  async create(@Body() saleCreateDto: SaleCreateDto): Promise<SaleResponse> {
+  async create(@Body() saleCreateDto: SaleCreateDto): Promise<SaleResponseDto> {
     const { date, userId, products } = saleCreateDto;
     const request = {
       id: randomUUID(),
@@ -20,6 +21,8 @@ export class SaleController {
       products,
     };
 
-    return this.saleCreate.run(request);
+    const sale = await this.saleCreate.run(request);
+
+    return saleResponseMapper(sale);
   }
 }

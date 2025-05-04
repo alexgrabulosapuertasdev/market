@@ -56,13 +56,7 @@ describe('UserUpdate', () => {
     });
 
     expect(userRepository.save).toHaveBeenCalledWith(userUpdated);
-    expect(response).toEqual({
-      id: user.id.value,
-      name: newName,
-      surnames: user.surnames.value,
-      email: user.email.value,
-      role: user.role.value,
-    });
+    expect(response).toEqual(userUpdated);
     expect(encryptPasswordSpyOn).toHaveBeenCalledWith(passwordEncrypted);
   });
 });

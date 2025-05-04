@@ -1,75 +1,46 @@
 import { Injectable } from '@nestjs/common';
-import { randomUUID } from 'crypto';
 import { SaleCreateRequest } from './sale.create.request';
 import { Sale } from '../../domain/aggregates/sale';
-import { SaleResponse } from '../../domain/interfaces/sale-response';
 import { SaleRepository } from '../../domain/ports/sale.repository';
 import { ProductRepository } from '../../../product/domain/ports/product.repository';
-import { SaleProduct } from '../../../sale-product/domain/aggregates/sale-product';
-import { SaleProductRepository } from '../../../sale-product/domain/ports/sale-product.repository';
 
 @Injectable()
 export class SaleCreate {
   constructor(
     private readonly saleRepository: SaleRepository,
     private readonly productRepository: ProductRepository,
-    private readonly saleProductRepository: SaleProductRepository,
   ) {}
 
-  async run(saleCreateRequest: SaleCreateRequest): Promise<SaleResponse> {
+  async run(saleCreateRequest: SaleCreateRequest): Promise<Sale> {
     const { id, date, userId, products } = saleCreateRequest;
-    const productsId = products.map(({ productId }) => productId);
 
     const productsResponse = await this.productRepository.findAllByIds(
-      productsId,
+      products.map((product) => product.productId),
     );
 
     const productsMap = productsResponse.reduce((map, product) => {
-      const { id, name, price } = product.toPrimitives();
-      map.set(id, { name, price });
+      const primitives = product.toPrimitives();
+
+      map.set(primitives.id, primitives);
+
       return map;
     }, new Map());
 
-    const saleProducts = products.map(({ productId, quantity }) => {
-      const { name, price } = productsMap.get(productId);
-
-      const saleProductPrimitive = {
-        id: randomUUID(),
-        name,
-        price,
-        quantity,
-        productId,
-      };
-
-      return SaleProduct.create(saleProductPrimitive);
-    });
-
-    const saleProductsResponse = await this.saleProductRepository.saveMany(
-      saleProducts,
-    );
+    const saleProducts = products.map(({ productId, quantity }) => ({
+      ...productsMap.get(productId),
+      quantity,
+      productId,
+    }));
 
     const sale = Sale.create({
       id,
       date,
       userId,
-      saleProducts: saleProductsResponse.map((sp) => sp.toPrimitives()),
+      products: saleProducts,
     });
 
-    const saleResponse = (await this.saleRepository.save(sale)).toPrimitives();
+    const saleResponse = await this.saleRepository.save(sale);
 
-    return {
-      id: saleResponse.id,
-      date: saleResponse.date,
-      totalAmount: saleResponse.totalAmount,
-      userId: saleResponse.userId,
-      saleProducts: saleResponse.saleProducts.map((saleProduct) => ({
-        id: saleProduct.id,
-        name: saleProduct.name,
-        price: saleProduct.price,
-        quantity: saleProduct.quantity,
-        totalAmount: saleProduct.totalAmount,
-        productId: saleProduct.productId,
-      })),
-    };
+    return saleResponse;
   }
 }

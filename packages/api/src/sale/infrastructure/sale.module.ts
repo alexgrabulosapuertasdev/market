@@ -1,23 +1,37 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { SaleController } from './sale.controller';
 import { SaleCreate } from '../application/create/sale.create';
-import { SaleTypeorm } from './persistence/entity/sale-typeorm.entity';
-import { SaleTypeormRepository } from './persistence/sale-typeorm.repository';
-import { SaleProductModule } from '../../sale-product/infrastructure/sale-product.module';
 import { SaleRepository } from '../domain/ports/sale.repository';
+import { MongooseModule } from '@nestjs/mongoose';
+import {
+  SaleMongoose,
+  SaleSchema,
+} from './persistence/entity/sale-mongoose.model';
+import { SaleMongooseRepository } from './persistence/sale-mongoose.repository';
+import { SaleMongodbConfig } from './persistence/sale-mongodb.config';
 import { ProductModule } from '../../product/infrastructure/product.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([SaleTypeorm]),
+    ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
+    SaleMongodbConfig.createConnection(),
+    MongooseModule.forFeature(
+      [
+        {
+          name: SaleMongoose.name,
+          schema: SaleSchema,
+          collection: 'sale',
+        },
+      ],
+      'sale',
+    ),
     ProductModule,
-    SaleProductModule,
   ],
   controllers: [SaleController],
   providers: [
     SaleCreate,
-    { provide: SaleRepository, useClass: SaleTypeormRepository },
+    { provide: SaleRepository, useClass: SaleMongooseRepository },
   ],
 })
 export class SaleModule {}

@@ -3,24 +3,18 @@ import { HttpStatus, INestApplication } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
+import { Model } from 'mongoose';
 import * as request from 'supertest';
-import { Repository } from 'typeorm';
 import { AuthSignIn } from '../src/auth/application/sign-in/auth.sign-in';
 import { ProductMother } from '../src/product/domain/mothers/product.mother';
 import { ProductNameMother } from '../src/product/domain/mothers/product-name.mother';
-import { ProductTypeorm } from '../src/product/infrastructure/persistence/entity/product-typeorm.entity';
-import { MariadbConfig } from '../src/shared/infrastructure/persistence/mariadb.config';
-import { MongoImageConfig } from '../src/shared/infrastructure/persistence/mongo-image.config';
+import { ProductMongoose } from '../src/product/infrastructure/persistence/entity/product-mongoose.model';
 import { ProductModule } from '../src/product/infrastructure/product.module';
-import { ProductImageMongoose } from '../src/product/infrastructure/persistence/entity/product-image-mongoose.model';
-import { Model } from 'mongoose';
 
 describe('ProductController (e2e)', () => {
   let app: INestApplication;
   let testingModule: TestingModule;
-  let productRepository: Repository<ProductTypeorm>;
-  let productImageModel: Model<ProductImageMongoose>;
+  let productRepository: Model<ProductMongoose>;
 
   beforeAll(async () => {
     const authSignInMock = {
@@ -29,8 +23,6 @@ describe('ProductController (e2e)', () => {
     testingModule = await Test.createTestingModule({
       imports: [
         ConfigModule.forRoot({ envFilePath: '.env.test' }),
-        MariadbConfig.createConnection(),
-        MongoImageConfig.createConnection(),
         ProductModule,
       ],
     })
@@ -38,12 +30,8 @@ describe('ProductController (e2e)', () => {
       .useValue(authSignInMock)
       .compile();
 
-    productRepository = testingModule.get<Repository<ProductTypeorm>>(
-      getRepositoryToken(ProductTypeorm),
-    );
-
-    productImageModel = testingModule.get<Model<ProductImageMongoose>>(
-      getModelToken(ProductImageMongoose.name),
+    productRepository = testingModule.get<Model<ProductMongoose>>(
+      getModelToken(ProductMongoose.name, 'product'),
     );
 
     app = testingModule.createNestApplication();
@@ -51,13 +39,11 @@ describe('ProductController (e2e)', () => {
   });
 
   beforeEach(async () => {
-    await productRepository.query('DELETE FROM product;');
-    await productImageModel.deleteMany({});
+    await productRepository.deleteMany({});
   });
 
   afterAll(async () => {
-    await productRepository.query('DELETE FROM product;');
-    await productImageModel.deleteMany({});
+    await productRepository.deleteMany({});
     await app.close();
     await testingModule.close();
   });
@@ -69,26 +55,7 @@ describe('ProductController (e2e)', () => {
         ProductMother.create().toPrimitives(),
       ].sort((a, b) => a.id.localeCompare(b.id));
 
-      await productRepository.save(
-        products.map(({ id, name, description, category, price, stock }) => ({
-          id,
-          name,
-          description,
-          category,
-          price,
-          stock,
-        })),
-      );
-
-      await productImageModel.insertMany(
-        products.map(({ id, image }) => ({
-          productId: id,
-          originalname: image.originalname,
-          mimetype: image.mimetype,
-          size: image.size,
-          base64: image.base64,
-        })),
-      );
+      await productRepository.insertMany(products);
 
       const { body, status } = await request(app.getHttpServer()).get(
         '/product',
@@ -97,17 +64,17 @@ describe('ProductController (e2e)', () => {
       expect(status).toBe(HttpStatus.OK);
 
       const response = body.sort((a, b) => a.id.localeCompare(b.id));
-      expect(
-        response.map(({ image, ...product }) => ({
+      expect(response).toEqual(
+        products.map(({ image, ...product }) => ({
           ...product,
           image: {
             originalname: image.originalname,
             mimetype: image.mimetype,
             size: image.size,
-            base64: image.base64,
+            base64: image.data.toString('base64'),
           },
         })),
-      ).toEqual(products);
+      );
     });
   });
 
@@ -124,26 +91,7 @@ describe('ProductController (e2e)', () => {
         ProductMother.create({ name: 'UNVALID' }).toPrimitives(),
       ];
 
-      await productRepository.save(
-        products.map(({ id, name, description, category, price, stock }) => ({
-          id,
-          name,
-          description,
-          category,
-          price,
-          stock,
-        })),
-      );
-
-      await productImageModel.insertMany(
-        products.map(({ id, image }) => ({
-          productId: id,
-          originalname: image.originalname,
-          mimetype: image.mimetype,
-          size: image.size,
-          base64: image.base64,
-        })),
-      );
+      await productRepository.insertMany(products);
 
       const { body, status } = await request(app.getHttpServer()).get(
         `/product?filter=${filter}`,
@@ -152,29 +100,30 @@ describe('ProductController (e2e)', () => {
       expect(status).toBe(HttpStatus.OK);
 
       const response = body.sort((a, b) => a.id.localeCompare(b.id));
-      expect(
-        response.map(({ image, ...product }) => ({
+      expect(response).toEqual(
+        validProducts.map(({ image, ...product }) => ({
           ...product,
           image: {
             originalname: image.originalname,
             mimetype: image.mimetype,
             size: image.size,
-            base64: image.base64,
+            base64: image.data.toString('base64'),
           },
         })),
-      ).toEqual(validProducts);
+      );
     });
   });
 
   describe('GET /:id', () => {
     it('should return a product by id', async () => {
-      const { image, ...product } = ProductMother.create().toPrimitives();
+      const {
+        image: { data, ...image },
+        ...product
+      } = ProductMother.create().toPrimitives();
 
-      await productRepository.save({ ...product });
-
-      await productImageModel.insertOne({
-        ...image,
-        productId: product.id,
+      await productRepository.insertOne({
+        ...product,
+        image: { data, ...image },
       });
 
       const { body, status } = await request(app.getHttpServer()).get(
@@ -182,17 +131,12 @@ describe('ProductController (e2e)', () => {
       );
 
       expect(status).toBe(HttpStatus.OK);
-      expect({
-        ...body,
-        image: {
-          originalname: body.image.originalname,
-          mimetype: body.image.mimetype,
-          size: body.image.size,
-          base64: body.image.base64,
-        },
-      }).toEqual({
+      expect(body).toEqual({
         ...product,
-        image,
+        image: {
+          ...image,
+          base64: data.toString('base64'),
+        },
       });
     });
   });

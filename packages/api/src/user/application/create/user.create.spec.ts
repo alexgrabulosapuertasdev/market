@@ -30,30 +30,18 @@ describe('UserCreate', () => {
     const user = UserMother.create();
     const request: UserCreateRequest = { ...user.toPrimitives() };
     const passwordEncrypted = 'passwordEncrypted';
+    const userWithPasswordEncrypted = UserMother.create({
+      ...user.toPrimitives(),
+      password: passwordEncrypted,
+    });
     jest
       .spyOn(encryptPasswordModule, 'encryptPassword')
       .mockResolvedValue(passwordEncrypted);
-    userRepository.save.mockResolvedValue(
-      UserMother.create({
-        ...user.toPrimitives(),
-        password: passwordEncrypted,
-      }),
-    );
+    userRepository.save.mockResolvedValue(userWithPasswordEncrypted);
 
     const userResponse = await userCreate.run(request);
 
-    expect(userRepository.save).toHaveBeenCalledWith(
-      UserMother.create({
-        ...user.toPrimitives(),
-        password: passwordEncrypted,
-      }),
-    );
-    expect(userResponse).toEqual({
-      id: user.id.value,
-      name: user.name.value,
-      surnames: user.surnames.value,
-      email: user.email.value,
-      role: user.role.value,
-    });
+    expect(userRepository.save).toHaveBeenCalledWith(userWithPasswordEncrypted);
+    expect(userResponse).toEqual(userWithPasswordEncrypted);
   });
 });

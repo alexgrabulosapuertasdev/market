@@ -1,31 +1,46 @@
+import { PRODUCT_CATEGORY } from 'src/product/domain/enum/product-category';
 import { SaleDate } from './sale-date';
 import { SaleId } from './sale-id';
+import { SaleProduct } from './sale-product';
 import { SaleTotalAmount } from './sale-total-amount';
 import { SaleUserId } from './sale-user-id';
-import { SaleProduct } from '../../../sale-product/domain/aggregates/sale-product';
 
 interface Primitives {
   id: string;
   date: Date;
   totalAmount: number;
   userId: string;
-  saleProducts: Array<{
-    id: string;
+  products: Array<{
+    productId: string;
     name: string;
+    description: string;
+    category: PRODUCT_CATEGORY;
     price: number;
     quantity: number;
-    productId: string;
     totalAmount: number;
+    image: {
+      originalname: string;
+      mimetype: string;
+      size: number;
+      data: Buffer;
+    };
   }>;
 }
 
-type PrimitivesCreate = Omit<Primitives, 'totalAmount' | 'saleProducts'> & {
-  saleProducts: Array<{
-    id: string;
+type PrimitivesCreate = Omit<Primitives, 'totalAmount' | 'products'> & {
+  products: Array<{
+    productId: string;
     name: string;
+    description: string;
+    category: PRODUCT_CATEGORY;
     price: number;
     quantity: number;
-    productId: string;
+    image: {
+      originalname: string;
+      mimetype: string;
+      size: number;
+      data: Buffer;
+    };
   }>;
 };
 
@@ -36,24 +51,24 @@ export class Sale {
     private id: SaleId,
     private date: SaleDate,
     private userId: SaleUserId,
-    private saleProducts: Array<SaleProduct>,
+    private products: Array<SaleProduct>,
   ) {
     this.totalAmount = new SaleTotalAmount(
-      this.saleProducts.reduce(
-        (acc, saleProduct) => acc + saleProduct.toPrimitives().totalAmount,
+      this.products.reduce(
+        (acc, product) => acc + product.toPrimitives().totalAmount,
         0,
       ),
     );
   }
 
   static create(params: PrimitivesCreate): Sale {
-    const { id, date, userId, saleProducts } = params;
+    const { id, date, userId, products } = params;
 
     return new Sale(
       new SaleId(id),
       new SaleDate(date),
       new SaleUserId(userId),
-      saleProducts.map((saleProduct) => SaleProduct.create(saleProduct)),
+      products.map((product) => SaleProduct.create(product)),
     );
   }
 
@@ -63,9 +78,7 @@ export class Sale {
       date: this.date.value,
       totalAmount: this.totalAmount.value,
       userId: this.userId.value,
-      saleProducts: this.saleProducts.map((saleProduct) =>
-        saleProduct.toPrimitives(),
-      ),
+      products: this.products.map((product) => product.toPrimitives()),
     };
   }
 }

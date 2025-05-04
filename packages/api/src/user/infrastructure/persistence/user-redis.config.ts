@@ -3,17 +3,17 @@ import { Injectable } from '@nestjs/common';
 import { redisStore } from 'cache-manager-redis-store';
 
 @Injectable()
-export class RedisConfig {
+export class UserRedisConfig {
   static createConnection(): CacheModuleAsyncOptions {
     return {
       isGlobal: true,
       useFactory: async () => {
         const store = await redisStore({
           socket: {
-            host: process.env['REDIS_HOST'],
-            port: Number(process.env['REDIS_PORT']),
+            host: process.env['USER_REDIS_HOST'],
+            port: Number(process.env['USER_REDIS_PORT']),
           },
-          password: process.env['REDIS_PASSWORD'],
+          password: process.env['USER_REDIS_PASSWORD'],
         });
 
         return {

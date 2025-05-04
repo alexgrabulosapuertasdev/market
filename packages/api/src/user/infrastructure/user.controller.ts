@@ -11,12 +11,13 @@ import { randomUUID } from 'crypto';
 import { UserCreateDto } from './dto/user-create.dto';
 import { UserFindAll } from '../application/find-all/user.find-all';
 import { UserCreate } from '../application/create/user.create';
-import { UserResponse } from '../domain/interface/user.response';
 import { UserDelete } from '../application/delete/user.delete';
 import { UserUpdateDto } from './dto/user-update.dto';
 import { UserUpdate } from '../application/update/user.update';
 import { USER_ROLE } from '../domain/enum/user.role';
 import { Roles } from '../../auth/infrastructure/decorators/roles.decorator';
+import { userResponseMapper } from './mappers/user-response.mapper';
+import { UserResponseDto } from './dto/user-response.dto';
 
 @Controller('user')
 export class UserController {
@@ -29,26 +30,32 @@ export class UserController {
 
   @Get()
   @Roles(USER_ROLE.ADMIN)
-  findAll(): Promise<UserResponse[]> {
-    return this.userFindAll.run();
+  async findAll(): Promise<UserResponseDto[]> {
+    const users = await this.userFindAll.run();
+
+    return users.map((user) => userResponseMapper(user));
   }
 
   @Post()
   @Roles(USER_ROLE.ADMIN)
-  create(@Body() userCreateDto: UserCreateDto): Promise<UserResponse> {
-    return this.userCreate.run({
+  async create(@Body() userCreateDto: UserCreateDto): Promise<UserResponseDto> {
+    const user = await this.userCreate.run({
       ...userCreateDto,
       id: randomUUID(),
     });
+
+    return userResponseMapper(user);
   }
 
   @Put(':id')
   @Roles(USER_ROLE.ADMIN)
-  update(
+  async update(
     @Body() userUpdateDto: UserUpdateDto,
     @Param('id') id: string,
-  ): Promise<UserResponse> {
-    return this.userUpdate.run({ id, ...userUpdateDto });
+  ): Promise<UserResponseDto> {
+    const user = await this.userUpdate.run({ id, ...userUpdateDto });
+
+    return userResponseMapper(user);
   }
 
   @Delete(':id')
