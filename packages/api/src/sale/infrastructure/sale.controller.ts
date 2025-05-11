@@ -13,10 +13,10 @@ export class SaleController {
   @Post()
   @Public()
   async create(@Body() saleCreateDto: SaleCreateDto): Promise<SaleResponseDto> {
-    const { date, userId, products } = saleCreateDto;
+    const { userId, products } = saleCreateDto;
     const request = {
       id: randomUUID(),
-      date: new Date(date),
+      date: new Date(),
       userId,
       products,
     };

@@ -7,7 +7,6 @@ import { AuthSignIn } from '../src/auth/application/sign-in/auth.sign-in';
 import { ProductMother } from '../src/product/domain/mothers/product.mother';
 import { ProductMongoose } from '../src/product/infrastructure/persistence/entity/product-mongoose.model';
 import { SaleModule } from '../src/sale/infrastructure/sale.module';
-import { SaleDateMother } from '../src/sale/domain/mothers/sale-date.mother';
 import { SaleProductQuantityMother } from '../src/sale/domain/mothers/sale-product-quantity.mother';
 import { UserIdMother } from '../src/user/domain/mothers/user-id.mother';
 import { SaleCreateDto } from '../src/sale/infrastructure/dto/sale-create.dto';
@@ -66,7 +65,6 @@ describe('SaleController (e2e)', () => {
       ].sort((a, b) => a.id.localeCompare(b.id));
 
       const saleCreateDto: SaleCreateDto = {
-        date: new Date(SaleDateMother.create().value.setMilliseconds(0)),
         userId,
         products: products.map((product) => ({
           productId: product.id,
@@ -82,7 +80,9 @@ describe('SaleController (e2e)', () => {
 
       expect(status).toBe(HttpStatus.CREATED);
       expect(body.id).toBeDefined();
-      expect(new Date(body.date).getTime()).toBe(saleCreateDto.date.getTime());
+      const responseDate = new Date(body.date).getTime();
+      const now = Date.now();
+      expect(Math.abs(responseDate - now)).toBeLessThanOrEqual(1000);
       expect(body.totalAmount).toBe(
         saleCreateDto.products[0].quantity * products[0].price +
           saleCreateDto.products[1].quantity * products[1].price,
