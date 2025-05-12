@@ -4,5 +4,5 @@ export interface LoginCredentials {
 }
 
 export interface LoginResponse {
-  token: string;
+  message: string;
 }

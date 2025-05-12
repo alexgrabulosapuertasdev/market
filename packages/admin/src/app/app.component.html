@@ -1,5 +1,6 @@
-@if (authService.getToken()) {
-<app-topbar (menuToggled)="toggleMenu()"></app-topbar>
+<app-topbar [isLogged]="isLogged" (menuToggled)="toggleMenu()"></app-topbar>
+
+@if (isLogged) {
 <main class="main">
   @if (menuIsOpened) {
   <app-menu></app-menu>

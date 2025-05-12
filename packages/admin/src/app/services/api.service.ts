@@ -11,19 +11,19 @@ export class ApiService {
 
   protected get<T>(path: string): Observable<T> {
     return this.httpClient
-      .get(`${environment.API_URL}/${path}`)
+      .get(`${environment.API_URL}/${path}`, { withCredentials: true })
       .pipe(map((res) => res as T));
   }
 
   protected post<T>(path: string, body?: object): Observable<T> {
     return this.httpClient
-      .post(`${environment.API_URL}/${path}`, body)
+      .post(`${environment.API_URL}/${path}`, body, { withCredentials: true })
       .pipe(map((res) => res as T));
   }
 
   protected remove<T>(path: string): Observable<T> {
     return this.httpClient
-      .delete(`${environment.API_URL}/${path}`)
+      .delete(`${environment.API_URL}/${path}`, { withCredentials: true })
       .pipe(map((res) => res as T));
   }
 }

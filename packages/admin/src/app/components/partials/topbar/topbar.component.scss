@@ -3,24 +3,38 @@
   background: var(--primary-color);
   color: white;
   display: flex;
+  justify-content: space-between;
   gap: 1.5rem;
-  padding-left: 3rem;
+  padding: 0 3rem;
   width: 100%;
 
   a {
     color: white;
     text-decoration: none;
   }
-}
-
-.menu-toggle {
-  aspect-ratio: 1;
-  background: transparent;
-  border-radius: 50%;
-  border-color: white;
-  color: white;
   
   i {
     background: transparent;
+  }
+
+  &__buttons{
+    display: flex;
+    gap: 1rem;
+
+    .menu-toggle {
+      aspect-ratio: 1;
+      background: transparent;
+      border-radius: 50%;
+      border-color: white;
+      color: white;
+    }
+
+    .button-logout {
+      background: transparent;
+      border-radius: 50%;
+      border-color: white;
+      color: white;
+      aspect-ratio: 1;
+    }
   }
 }

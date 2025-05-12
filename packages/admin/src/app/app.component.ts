@@ -11,7 +11,9 @@ export class AppComponent {
   isLogged = false;
 
   constructor(public readonly authService: AuthService) {
-    this.isLogged = Boolean(this.authService.getToken());
+    this.authService.isLogged().subscribe((isLogged) => {
+      this.isLogged = isLogged;
+    });
   }
 
   toggleMenu(): void {

@@ -17,7 +17,7 @@ export default function LoginScreen() {
     setPassword,
     handleLogin,
     isSubmitted,
-    token,
+    isLogged,
     finished,
   } = useLogin();
 
@@ -26,10 +26,10 @@ export default function LoginScreen() {
   };
 
   useEffect(() => {
-    if (token) {
+    if (isLogged) {
       navigation.navigate('Products');
     }
-  }, [token, navigation]);
+  }, [isLogged, navigation]);
 
   return (
     <View style={styles.container}>
