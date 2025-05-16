@@ -1,9 +1,12 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
+import * as cookieParser from 'cookie-parser';
+import * as jwt from 'jsonwebtoken';
 import { Model } from 'mongoose';
 import * as request from 'supertest';
 import { AuthSignIn } from '../src/auth/application/sign-in/auth.sign-in';
+import { JwtConstants } from '../src/auth/infrastructure/constants/jwt.constants';
 import { ProductMother } from '../src/product/domain/mothers/product.mother';
 import { ProductMongoose } from '../src/product/infrastructure/persistence/entity/product-mongoose.model';
 import { SaleModule } from '../src/sale/infrastructure/sale.module';
@@ -38,6 +41,7 @@ describe('SaleController (e2e)', () => {
     );
 
     app = testingModule.createNestApplication();
+    app.use(cookieParser());
     await app.init();
   });
 
@@ -65,17 +69,21 @@ describe('SaleController (e2e)', () => {
       ].sort((a, b) => a.id.localeCompare(b.id));
 
       const saleCreateDto: SaleCreateDto = {
-        userId,
         products: products.map((product) => ({
           productId: product.id,
           quantity: SaleProductQuantityMother.create().value,
         })),
       };
 
+      const token = jwt.sign({ id: userId }, JwtConstants.SECRET, {
+        expiresIn: '1d',
+      });
+
       await productRepository.insertMany(products);
 
       const { body, status } = await request(app.getHttpServer())
         .post('/sale')
+        .set('Cookie', [`auth_token=${token}`])
         .send(saleCreateDto);
 
       expect(status).toBe(HttpStatus.CREATED);
@@ -87,7 +95,7 @@ describe('SaleController (e2e)', () => {
         saleCreateDto.products[0].quantity * products[0].price +
           saleCreateDto.products[1].quantity * products[1].price,
       );
-      expect(body.userId).toBe(saleCreateDto.userId);
+      expect(body.userId).toBe(userId);
       expect(body.products.length).toBe(2);
 
       const saleProducts = body.products.sort((a, b) =>
