@@ -71,6 +71,14 @@ jobs:
           MONGO_INITDB_DATABASE: ${{ secrets.SALE_MONGODB_NAME_TEST }}
         ports:
           - 27018:27017
+      cart-mongodb:
+        image: mongo
+        env:
+          MONGO_INITDB_ROOT_USERNAME: ${{ secrets.CART_MONGODB_USERNAME_TEST }}
+          MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.CART_MONGODB_PASSWORD_TEST }}
+          MONGO_INITDB_DATABASE: ${{ secrets.CART_MONGODB_NAME_TEST }}
+        ports:
+          - 27019:27017
     steps:
       - uses: actions/checkout@v2
         with:
@@ -108,6 +116,12 @@ jobs:
           echo "SALE_MONGODB_PORT=27018" >> .env.test
           echo "SALE_MONGODB_USERNAME=${{ secrets.SALE_MONGODB_USERNAME_TEST }}" >> .env.test
           echo "SALE_MONGODB_PASSWORD=${{ secrets.SALE_MONGODB_PASSWORD_TEST }}" >> .env.test
+
+          echo "CART_MONGODB_HOST=${{ secrets.CART_MONGODB_HOST_TEST }}" >> .env.test
+          echo "CART_MONGODB_NAME=${{ secrets.CART_MONGODB_NAME_TEST }}" >> .env.test
+          echo "CART_MONGODB_PORT=27019" >> .env.test
+          echo "CART_MONGODB_USERNAME=${{ secrets.CART_MONGODB_USERNAME_TEST }}" >> .env.test
+          echo "CART_MONGODB_PASSWORD=${{ secrets.CART_MONGODB_PASSWORD_TEST }}" >> .env.test
       - name: Install dependencies
         run: npm install
       - name: Test e2e

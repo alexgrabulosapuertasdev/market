@@ -30,6 +30,16 @@ services:
     ports:
       - $PRODUCT_MONGODB_PORT:27017
 
+  cart-mongodb:
+    image: mongo
+    container_name: cart-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: $CART_MONGODB_USERNAME
+      MONGO_INITDB_ROOT_PASSWORD: $CART_MONGODB_PASSWORD
+      MONGO_INITDB_DATABASE: $CART_MONGODB_NAME
+    ports:
+      - $CART_MONGODB_PORT:27017
+
   sale-mongodb:
     image: mongo
     container_name: sale-mongodb
